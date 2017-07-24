@@ -1,0 +1,35 @@
+group 'com.ortec.clktime'
+version '1.0.0'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'war'
+
+sourceCompatibility = 1.8
+
+ext {
+    springframework = '4.3.10.RELEASE'
+    jackson = '2.9.0.pr4'
+    servlet = '3.1.0'
+    lombok = '0.9.3.1'
+    guava = '22.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    provided
+}
+
+dependencies {
+    provided "javax.servlet:javax.servlet-api:$servlet"
+    compile "org.springframework:spring-core:$springframework"
+    compile "org.springframework:spring-web:$springframework"
+    compile "org.springframework:spring-webmvc:$springframework"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jackson"
+    compile "com.google.guava:guava:$guava"
+    provided "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jackson"
+    provided "org.projectlombok:lombok-maven:$lombok"
+}
