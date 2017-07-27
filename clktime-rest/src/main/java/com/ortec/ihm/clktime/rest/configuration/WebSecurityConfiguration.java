@@ -21,7 +21,7 @@ import java.util.Collections;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    ExternalAuthenticationProvider authenticationProvider;
+    private ExternalAuthenticationProvider authenticationProvider;
 
     @Override
     @Bean

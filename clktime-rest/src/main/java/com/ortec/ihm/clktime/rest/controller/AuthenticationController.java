@@ -1,8 +1,7 @@
 package com.ortec.ihm.clktime.rest.controller;
 
+import com.ortec.ihm.clktime.rest.configuration.annotations.Tokened;
 import com.ortec.ihm.clktime.rest.model.dto.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,13 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuthenticationController {
+
     @RequestMapping("/test")
-    public User message(){
-        return new User();
+    public User message(@Tokened User user){
+        return user;
     }
 
     @RequestMapping("/")
-    public User hello(){
-        return new User();
+    public String hello(){
+        return "Ortec restful application";
     }
 }

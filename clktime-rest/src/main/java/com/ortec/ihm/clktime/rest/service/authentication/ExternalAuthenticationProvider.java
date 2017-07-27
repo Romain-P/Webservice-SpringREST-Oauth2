@@ -1,5 +1,7 @@
 package com.ortec.ihm.clktime.rest.service.authentication;
 
+import com.ortec.ihm.clktime.rest.model.dto.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,16 +19,19 @@ import java.util.ArrayList;
 @Component
 public class ExternalAuthenticationProvider implements AuthenticationProvider, Serializable {
 
+    @Autowired
+    AuthenticationService authenticationService;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        //TODO: external service to call
-        if (true) {
-            return new UsernamePasswordAuthenticationToken(name, password, new ArrayList<>());
-        } else
-            throw new BadCredentialsException("Bad Credentials");
+        User user = authenticationService
+                .loadByConnection(name, password)
+                .orElseThrow(() -> new BadCredentialsException("Bad Credentials"));
+
+        return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
     }
 
     @Override
