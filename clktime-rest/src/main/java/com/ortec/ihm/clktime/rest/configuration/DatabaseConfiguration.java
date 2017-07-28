@@ -30,12 +30,7 @@ import java.util.Properties;
 public class DatabaseConfiguration {
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean
-    entityManagerFactory(@Value("${database.hbm2ddl.auto}") String hbm,
-                         @Value("${database.dialect}") String dialect,
-                         @Value("${database.current_session_context_class}") String context,
-                         DataSource dataSource)
-    {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setDatabase(Database.SQL_SERVER);
         vendorAdapter.setGenerateDdl(false);

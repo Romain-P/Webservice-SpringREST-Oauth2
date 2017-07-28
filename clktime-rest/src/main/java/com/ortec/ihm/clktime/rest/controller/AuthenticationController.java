@@ -1,9 +1,9 @@
 package com.ortec.ihm.clktime.rest.controller;
 
 import com.ortec.ihm.clktime.rest.configuration.annotations.Tokened;
-import com.ortec.ihm.clktime.rest.model.dto.TokenedUser;
-import com.ortec.ihm.clktime.rest.model.entities.Test;
-import com.ortec.ihm.clktime.rest.repositories.TestRepository;
+import com.ortec.ihm.clktime.rest.model.dto.GlobalUser;
+import com.ortec.ihm.clktime.rest.model.entities.User;
+import com.ortec.ihm.clktime.rest.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     @Autowired
-    TestRepository repository;
+    UserRepository repository;
 
     @RequestMapping("/test")
-    public Test message(@Tokened TokenedUser user){
+    public User message(@Tokened GlobalUser user){
         return repository.findByNumber(1);
     }
 

@@ -1,6 +1,6 @@
 package com.ortec.ihm.clktime.rest.service.authentication;
 
-import com.ortec.ihm.clktime.rest.model.dto.TokenedUser;
+import com.ortec.ihm.clktime.rest.model.dto.GlobalUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,7 +27,7 @@ public class ExternalAuthenticationProvider implements AuthenticationProvider, S
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        TokenedUser user = authenticationService
+        GlobalUser user = authenticationService
                 .loadByConnection(name, password)
                 .orElseThrow(() ->
                         new BadCredentialsException(String.format("Bad user/pass for %s", name)));
