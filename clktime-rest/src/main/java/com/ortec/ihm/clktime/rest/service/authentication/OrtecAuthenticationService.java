@@ -1,6 +1,6 @@
 package com.ortec.ihm.clktime.rest.service.authentication;
 
-import com.ortec.ihm.clktime.rest.model.dto.User;
+import com.ortec.ihm.clktime.rest.model.dto.TokenedUser;
 import fr.ortec.dsi.securite.authentification.activedirectory.ADAuthentification;
 import fr.ortec.dsi.securite.authentification.services.Authentification;
 import fr.ortec.dsi.securite.authentification.services.exception.AuthentificationException;
@@ -27,9 +27,9 @@ public class OrtecAuthenticationService implements AuthenticationService{
         this.authentication = new ADAuthentification(remoteAddress, baseDomain, authenticationType);
     }
 
-    public Optional<User> loadByConnection(String username, String password) {
+    public Optional<TokenedUser> loadByConnection(String username, String password) {
         try {
-            return Optional.ofNullable(User.create(authentication.getUtilisateur(username, password)));
+            return TokenedUser.createWith(authentication.getUtilisateur(username, password));
         } catch (AuthentificationException e) {
             return Optional.empty();
         }

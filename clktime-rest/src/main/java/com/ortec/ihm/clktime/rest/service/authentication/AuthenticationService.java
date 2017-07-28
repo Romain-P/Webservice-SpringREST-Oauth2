@@ -1,6 +1,6 @@
 package com.ortec.ihm.clktime.rest.service.authentication;
 
-import com.ortec.ihm.clktime.rest.model.dto.User;
+import com.ortec.ihm.clktime.rest.model.dto.TokenedUser;
 
 import java.util.Optional;
 
@@ -9,5 +9,5 @@ import java.util.Optional;
  * @Date: 27/07/2017
  */
 public interface AuthenticationService {
-    Optional<User> loadByConnection(String username, String password);
+    Optional<TokenedUser> loadByConnection(String username, String password);
 }

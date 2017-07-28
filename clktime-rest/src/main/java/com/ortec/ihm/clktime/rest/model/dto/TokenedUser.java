@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * @Author: romain.pillot
@@ -13,7 +14,7 @@ import javax.annotation.Nullable;
 @Accessors(chain = true)
 @Getter @Setter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class User {
+public final class TokenedUser {
     private final String username;
     private final String forname;
     private final String lastname;
@@ -23,9 +24,9 @@ public final class User {
     private final String entity;
     private final byte[] avatar;
 
-    public static User create(@Nullable  Utilisateur dist) {
-        return dist == null ? null
-        : new User(
+    public static Optional<TokenedUser> createWith(@Nullable  Utilisateur dist) {
+        return dist == null ? Optional.empty()
+        : Optional.of(new TokenedUser(
                 dist.getUsername(),
                 dist.getNom(),
                 dist.getPrenom(),
@@ -34,6 +35,6 @@ public final class User {
                 dist.getDepartement(),
                 dist.getEntite(),
                 dist.getAvatar()
-        );
+        ));
     }
 }
