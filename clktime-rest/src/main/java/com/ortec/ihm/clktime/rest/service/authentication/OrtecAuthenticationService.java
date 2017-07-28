@@ -4,7 +4,6 @@ import com.lambdista.util.Try;
 import com.ortec.ihm.clktime.rest.model.dto.GlobalUser;
 import com.ortec.ihm.clktime.rest.model.entities.User;
 import com.ortec.ihm.clktime.rest.repositories.UserRepository;
-import jdk.nashorn.internal.objects.Global;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,7 +42,7 @@ public class OrtecAuthenticationService implements AuthenticationService{
                         return first_auth;
                     }
 
-                    return GlobalUser.of(ldapUser.get(), user);
+                    return GlobalUser.of(ldap, user);
                 })
                 .orElseGet(() -> GlobalUser.of(null, userRepository.findByUsernameAndPassword(username, password)));
     }
