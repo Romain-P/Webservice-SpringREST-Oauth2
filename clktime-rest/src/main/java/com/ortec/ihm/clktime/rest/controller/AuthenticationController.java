@@ -21,7 +21,7 @@ public class AuthenticationController {
 
     @RequestMapping("/test")
     public User message(@Tokened GlobalUser user){
-        return repository.findByNumber(1);
+        return user.getModel();
     }
 
     @RequestMapping("/")

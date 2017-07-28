@@ -1,19 +1,14 @@
 package com.ortec.ihm.clktime.rest.service.authentication;
 
 import com.lambdista.util.Try;
-import com.ortec.ihm.clktime.rest.model.dsl.Users;
 import com.ortec.ihm.clktime.rest.model.dto.GlobalUser;
+import com.ortec.ihm.clktime.rest.model.entities.User;
 import com.ortec.ihm.clktime.rest.repositories.UserRepository;
-import fr.ortec.dsi.domaine.Utilisateur;
-import fr.ortec.dsi.securite.authentification.activedirectory.ADAuthentification;
-import fr.ortec.dsi.securite.authentification.services.Authentification;
-import fr.ortec.dsi.securite.authentification.services.exception.AuthentificationException;
 import jdk.nashorn.internal.objects.Global;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -33,15 +28,23 @@ public class OrtecAuthenticationService implements AuthenticationService{
                                       @Value("${login-service.authentication-type}") String authenticationType)
     {
         this.userRepository = userRepository;
-        this.authentication = new ADAuthentification(remoteAddress, baseDomain, authenticationType);
+        this.authentication = new Authentification(remoteAddress, baseDomain, authenticationType);
     }
 
     public Optional<GlobalUser> loadByConnection(String username, String password) {
         Optional<Utilisateur> ldapUser = Try.apply(() -> authentication.getUtilisateur(username, password)).toOptional();
 
-        /** todo
-        return ldapUser
-                .map(x -> Optional.of(GlobalUser.of(ldapUser.get(), userRepository.findByUsername(username))))
-                .orElse(GlobalUser.of(null, userRepository.findByUsernamePassword(username, password))); **/
+        return ldapUser.map(ldap -> {
+                    User user = userRepository.findByUsername(username);
+
+                    if (user == null) {
+                        Optional<GlobalUser> first_auth = Optional.of(GlobalUser.of(ldap));
+                        userRepository.save(first_auth.get().getModel());
+                        return first_auth;
+                    }
+
+                    return GlobalUser.of(ldapUser.get(), user);
+                })
+                .orElseGet(() -> GlobalUser.of(null, userRepository.findByUsernameAndPassword(username, password)));
     }
 }
