@@ -38,13 +38,15 @@ public class OrtecAuthenticationService implements AuthenticationService{
         return Optional.ofNullable(
                 ldapUser.map(ldap -> userRepository.findByUsername(username)
                             .map((found) -> GlobalUser.of(ldap, found))
-                            .orElseGet(() -> {
-                                GlobalUser first_auth = GlobalUser.of(ldap);
-                                userRepository.save(first_auth.getModel());
-                                return first_auth;
-                            })
+                            .orElseGet(() -> ldapFirstConnection(ldap))
                 ).orElseGet(() -> userRepository.findByUsernameAndPassword(username, password)
                         .map((found) -> GlobalUser.of(null, found))
                         .orElse(null)));
+    }
+
+    private GlobalUser ldapFirstConnection(Utilisateur ldap) {
+        GlobalUser first_auth = GlobalUser.of(ldap);
+        userRepository.save(first_auth.getModel());
+        return first_auth;
     }
 }
