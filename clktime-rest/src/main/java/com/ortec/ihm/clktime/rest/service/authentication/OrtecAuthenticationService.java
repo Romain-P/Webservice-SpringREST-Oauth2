@@ -4,10 +4,12 @@ import com.lambdista.util.Try;
 import com.ortec.ihm.clktime.rest.model.dto.GlobalUser;
 import com.ortec.ihm.clktime.rest.model.entities.User;
 import com.ortec.ihm.clktime.rest.repositories.UserRepository;
+import jdk.nashorn.internal.objects.Global;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 /**
@@ -33,17 +35,16 @@ public class OrtecAuthenticationService implements AuthenticationService{
     public Optional<GlobalUser> loadByConnection(String username, String password) {
         Optional<Utilisateur> ldapUser = Try.apply(() -> authentication.getUtilisateur(username, password)).toOptional();
 
-        return ldapUser.map(ldap -> {
-                    User user = userRepository.findByUsername(username);
-
-                    if (user == null) {
-                        Optional<GlobalUser> first_auth = Optional.of(GlobalUser.of(ldap));
-                        userRepository.save(first_auth.get().getModel());
-                        return first_auth;
-                    }
-
-                    return GlobalUser.of(ldap, user);
-                })
-                .orElseGet(() -> GlobalUser.of(null, userRepository.findByUsernameAndPassword(username, password)));
+        return Optional.ofNullable(
+                ldapUser.map(ldap -> userRepository.findByUsername(username)
+                            .map((found) -> GlobalUser.of(ldap, found))
+                            .orElseGet(() -> {
+                                GlobalUser first_auth = GlobalUser.of(ldap);
+                                userRepository.save(first_auth.getModel());
+                                return first_auth;
+                            })
+                ).orElseGet(() -> userRepository.findByUsernameAndPassword(username, password)
+                        .map((found) -> GlobalUser.of(null, found))
+                        .orElse(null)));
     }
 }

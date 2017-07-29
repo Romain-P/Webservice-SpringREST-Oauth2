@@ -21,10 +21,8 @@ public final class GlobalUser {
     private final Optional<Utilisateur> ldap;
     private final User model;
 
-    public static Optional<GlobalUser> of(@Nullable Utilisateur ldapUser, @Nullable User user) {
-        if (user == null)
-            return Optional.empty();
-        return Optional.of(new GlobalUser(ldapUser, user));
+    public static GlobalUser of(@Nullable Utilisateur ldapUser, @NotNull User user) {
+        return new GlobalUser(ldapUser, user);
     }
 
     public static GlobalUser of(@NotNull Utilisateur ldapUser) {
