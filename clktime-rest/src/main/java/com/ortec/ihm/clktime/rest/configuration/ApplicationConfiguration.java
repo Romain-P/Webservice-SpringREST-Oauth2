@@ -1,6 +1,6 @@
 package com.ortec.ihm.clktime.rest.configuration;
 
-import com.ortec.ihm.clktime.rest.configuration.annotations.Tokened;
+import com.ortec.ihm.clktime.rest.configuration.annotation.Tokened;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;

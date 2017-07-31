@@ -2,14 +2,15 @@ package com.ortec.ihm.clktime.rest.service.authentication;
 
 import com.lambdista.util.Try;
 import com.ortec.ihm.clktime.rest.model.dto.GlobalUser;
-import com.ortec.ihm.clktime.rest.model.entities.User;
-import com.ortec.ihm.clktime.rest.repositories.UserRepository;
-import jdk.nashorn.internal.objects.Global;
+import com.ortec.ihm.clktime.rest.repository.UserRepository;
+import fr.ortec.dsi.domaine.Utilisateur;
+import fr.ortec.dsi.securite.authentification.activedirectory.ADAuthentification;
+import fr.ortec.dsi.securite.authentification.services.Authentification;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 /**
@@ -29,7 +30,7 @@ public class OrtecAuthenticationService implements AuthenticationService{
                                       @Value("${login-service.authentication-type}") String authenticationType)
     {
         this.userRepository = userRepository;
-        this.authentication = new Authentification(remoteAddress, baseDomain, authenticationType);
+        this.authentication = new ADAuthentification(remoteAddress, baseDomain, authenticationType);
     }
 
     public Optional<GlobalUser> loadByConnection(String username, String password) {
@@ -38,8 +39,8 @@ public class OrtecAuthenticationService implements AuthenticationService{
         return Optional.ofNullable(
                 ldapUser.map(ldap -> userRepository.findByUsername(username)
                             .map((found) -> GlobalUser.of(ldap, found))
-                            .orElseGet(() -> ldapFirstConnection(ldap))
-                ).orElseGet(() -> userRepository.findByUsernameAndPassword(username, password)
+                            .orElseGet(() -> ldapFirstConnection(ldap)))
+                        .orElseGet(() -> userRepository.findByUsernameAndPassword(username, DigestUtils.sha256Hex(password))
                         .map((found) -> GlobalUser.of(null, found))
                         .orElse(null)));
     }

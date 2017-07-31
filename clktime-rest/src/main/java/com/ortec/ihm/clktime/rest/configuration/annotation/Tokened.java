@@ -1,4 +1,4 @@
-package com.ortec.ihm.clktime.rest.configuration.annotations;
+package com.ortec.ihm.clktime.rest.configuration.annotation;
 
 import java.lang.annotation.*;
 

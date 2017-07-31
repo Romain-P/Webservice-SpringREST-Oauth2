@@ -1,6 +1,6 @@
-package com.ortec.ihm.clktime.rest.repositories;
+package com.ortec.ihm.clktime.rest.repository;
 
-import com.ortec.ihm.clktime.rest.model.entities.User;
+import com.ortec.ihm.clktime.rest.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

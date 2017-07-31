@@ -1,9 +1,9 @@
 package com.ortec.ihm.clktime.rest.controller;
 
-import com.ortec.ihm.clktime.rest.configuration.annotations.Tokened;
+import com.ortec.ihm.clktime.rest.configuration.annotation.Tokened;
 import com.ortec.ihm.clktime.rest.model.dto.GlobalUser;
-import com.ortec.ihm.clktime.rest.model.entities.User;
-import com.ortec.ihm.clktime.rest.repositories.UserRepository;
+import com.ortec.ihm.clktime.rest.model.entity.User;
+import com.ortec.ihm.clktime.rest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

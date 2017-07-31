@@ -32,7 +32,7 @@ public class ExternalAuthenticationProvider implements AuthenticationProvider, S
                 .orElseThrow(() ->
                         new BadCredentialsException(String.format("Bad user/pass for %s", name)));
 
-        return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+        return new UsernamePasswordAuthenticationToken(user, null, user.getRoles());
     }
 
     @Override

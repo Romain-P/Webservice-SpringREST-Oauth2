@@ -1,10 +1,8 @@
 package com.ortec.ihm.clktime.rest.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -26,19 +24,25 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "com.ortec.ihm.clktime.rest.repositories")
+@EnableJpaRepositories(basePackages = "com.ortec.ihm.clktime.rest.repository")
 public class DatabaseConfiguration {
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource,
+                                                                       @Value("${database.dialect}") String dialect)
+    {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setDatabase(Database.SQL_SERVER);
         vendorAdapter.setGenerateDdl(false);
 
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan("com.ortec.ihm.clktime.rest.model.entities");
+        em.setPackagesToScan("com.ortec.ihm.clktime.rest.model.entity");
         em.setJpaVendorAdapter(vendorAdapter);
+
+        Properties properties = new Properties();
+        properties.setProperty("hibernate.dialect", dialect);
+        em.setJpaProperties(properties);
         return em;
     }
 
