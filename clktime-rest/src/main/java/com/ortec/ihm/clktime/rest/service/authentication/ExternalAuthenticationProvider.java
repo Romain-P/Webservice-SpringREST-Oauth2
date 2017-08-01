@@ -22,6 +22,13 @@ public class ExternalAuthenticationProvider implements AuthenticationProvider, S
     @Autowired
     AuthenticationService authenticationService;
 
+    /**
+     * Perform a connection by username and password.
+     *
+     * @param authentication an user login process
+     * @return a authentication token by username and password
+     * @throws AuthenticationException in case of invalid credentials
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String name = authentication.getName();
@@ -35,6 +42,10 @@ public class ExternalAuthenticationProvider implements AuthenticationProvider, S
         return new UsernamePasswordAuthenticationToken(user, null, user.getRoles());
     }
 
+    /**
+     * @param authentication an authentication template looking for its implementation
+     * @return true if the expected authentication is an UsernamePasswordAuthenticationToken.
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);

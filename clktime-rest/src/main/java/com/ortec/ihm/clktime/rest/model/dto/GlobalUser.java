@@ -1,7 +1,6 @@
 package com.ortec.ihm.clktime.rest.model.dto;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.ortec.ihm.clktime.rest.model.entity.User;
 import com.sun.istack.internal.NotNull;
 import fr.ortec.dsi.domaine.Utilisateur;
@@ -12,7 +11,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @Author: romain.pillot

@@ -24,6 +24,10 @@ import java.util.List;
  * @Date: 25/07/2017
  */
 
+/**
+ * Main configuration that scan the whole project annotated with
+ * spring annotations. It enable web-mvc and load the property files.
+ */
 @Configuration
 @EnableWebMvc
 @PropertySource("classpath:application.properties")
@@ -34,6 +38,11 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter{
         configurer.enable();
     }
 
+    /**
+     * Custom Implementation of HandlerMethodArgumentResolver to retrieve
+     * a GlobalUser on any method parameters annotated with @Tokened,
+     * a method called by an user request (might be used into controllers).
+     */
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(new HandlerMethodArgumentResolver() {
@@ -59,15 +68,16 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter{
 
             <T extends Annotation> T findMethodAnnotation(Class<T> annotationClass, MethodParameter parameter) {
                 T annotation = parameter.getParameterAnnotation(annotationClass);
-                if(annotation != null) {
+
+                if(annotation != null)
                     return annotation;
-                }
+
                 Annotation[] annotationsToSearch = parameter.getParameterAnnotations();
                 for(Annotation toSearch : annotationsToSearch) {
                     annotation = AnnotationUtils.findAnnotation(toSearch.annotationType(), annotationClass);
-                    if(annotation != null) {
+
+                    if(annotation != null)
                         return annotation;
-                    }
                 }
                 return null;
             }

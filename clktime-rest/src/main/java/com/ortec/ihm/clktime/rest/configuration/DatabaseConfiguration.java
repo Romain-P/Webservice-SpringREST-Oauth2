@@ -27,6 +27,10 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackages = "com.ortec.ihm.clktime.rest.repository")
 public class DatabaseConfiguration {
 
+    /**
+     * @return the wrapped spring data jpa configuration.
+     *         Change the scanning packages in case of refactoring, renaming..
+     */
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource,
                                                                        @Value("${database.dialect}") String dialect)
@@ -46,6 +50,9 @@ public class DatabaseConfiguration {
         return em;
     }
 
+    /**
+     * @return the main datasource
+     */
     @Bean
     public DataSource dataSource(@Value("${database.driver_class}") String driver,
                                  @Value("${database.remote}") String remote,
@@ -60,6 +67,9 @@ public class DatabaseConfiguration {
         return dataSource;
     }
 
+    /**
+     * Set up the EntityManagerFactory, previously configured (see
+     */
     @Bean
     public PlatformTransactionManager transactionManager(EntityManagerFactory emf){
         JpaTransactionManager transactionManager = new JpaTransactionManager();

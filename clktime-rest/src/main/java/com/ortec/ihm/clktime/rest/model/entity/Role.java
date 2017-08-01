@@ -18,4 +18,9 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+
+    @Override
+    public boolean equals(Object o) {
+        return o == this || (o instanceof Role && ((Role)o).name.equals(this.name));
+    }
 }

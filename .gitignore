@@ -2,3 +2,5 @@
 *.iml
 */.gradle/
 */build/
+application.properties
+token-request.template

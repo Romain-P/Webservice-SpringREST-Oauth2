@@ -33,6 +33,16 @@ public class OrtecAuthenticationService implements AuthenticationService{
         this.authentication = new ADAuthentification(remoteAddress, baseDomain, authenticationType);
     }
 
+    /**
+     * This implementation first check if the user is a ldap user (Ortec Active Directory).
+     * If yes, it gonna try to retrieve his app-related details, or create some on the first connection.
+     * If not, it checks for a valid couple of username/password(hashed in sha256) and retrieve his details.
+     * In case of no account found, the optional will content a null user.
+     *
+     * @param username the username
+     * @param password the assigned password
+     * @return an optional of global user.
+     */
     public Optional<GlobalUser> loadByConnection(String username, String password) {
         Optional<Utilisateur> ldapUser = Try.apply(() -> authentication.getUtilisateur(username, password)).toOptional();
 
@@ -45,6 +55,10 @@ public class OrtecAuthenticationService implements AuthenticationService{
                         .orElse(null)));
     }
 
+    /**
+     * @param ldap an ortec active directory user.
+     * @return a GlobalUser an generate its model
+     */
     private GlobalUser ldapFirstConnection(Utilisateur ldap) {
         GlobalUser first_auth = GlobalUser.of(ldap);
         userRepository.save(first_auth.getModel());

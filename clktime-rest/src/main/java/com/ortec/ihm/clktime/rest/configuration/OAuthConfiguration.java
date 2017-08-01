@@ -25,6 +25,9 @@ public class OAuthConfiguration {
 	@EnableResourceServer
 	protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
+		/**
+		 * Define authorized requests for all users.
+		 */
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
             http.authorizeRequests().antMatchers("/").permitAll().anyRequest().authenticated();
@@ -47,6 +50,10 @@ public class OAuthConfiguration {
 		@Value("${authentication.token-request.url}")
 		private String tokenUrl;
 
+		/**
+		 * Bind our authentication provider to oauth,
+		 * with a in-memory token store.
+		 */
 		@Override
 		public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 			endpoints
@@ -61,6 +68,12 @@ public class OAuthConfiguration {
 		@Value("${authentication.secret-key}")
 		private String clientKey;
 
+		/**
+		 * Define all applications that will access to this one.
+		 * All applications accessing to this rest app is considered as a client.
+		 * One client can be created at this moment TODO: multiple clients
+		 * Config your secret credentials in resources/application.properties
+		 */
 		@Override
 		public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 			clients
@@ -72,6 +85,11 @@ public class OAuthConfiguration {
 						.secret(clientKey);
 		}
 
+		/**
+		 * Setups the token store and enables refresh tokens.
+		 * (Refresh tokens can be requested e.g after an Inactivity,
+		 * See online, oauth2 IdleTime configuration)
+		 */
 		@Bean
 		@Primary
 		public DefaultTokenServices tokenServices() {
