@@ -1,6 +1,6 @@
 package com.ortec.ihm.clktime.rest.service.authentication;
 
-import com.ortec.ihm.clktime.rest.model.dto.GlobalUser;
+import com.ortec.ihm.clktime.rest.database.model.dto.UserDTO;
 
 import java.util.Optional;
 
@@ -16,5 +16,5 @@ public interface AuthenticationService {
      * @param password the assigned password
      * @return an optional of global user (content is nullable).
      */
-    Optional<GlobalUser> loadByConnection(String username, String password);
+    Optional<UserDTO> loadByConnection(String username, String password);
 }

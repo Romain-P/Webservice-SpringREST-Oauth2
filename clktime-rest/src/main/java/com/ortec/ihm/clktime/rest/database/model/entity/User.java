@@ -1,4 +1,4 @@
-package com.ortec.ihm.clktime.rest.model.entity;
+package com.ortec.ihm.clktime.rest.database.model.entity;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

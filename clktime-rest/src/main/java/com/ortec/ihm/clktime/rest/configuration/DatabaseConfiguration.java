@@ -1,5 +1,6 @@
 package com.ortec.ihm.clktime.rest.configuration;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +25,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "com.ortec.ihm.clktime.rest.repository")
+@EnableJpaRepositories(basePackages = "com.ortec.ihm.clktime.rest.database.repository")
 public class DatabaseConfiguration {
 
     /**
@@ -41,8 +42,9 @@ public class DatabaseConfiguration {
 
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan("com.ortec.ihm.clktime.rest.model.entity");
+        em.setPackagesToScan("com.ortec.ihm.clktime.rest.database.model.entity");
         em.setJpaVendorAdapter(vendorAdapter);
+
 
         Properties properties = new Properties();
         properties.setProperty("hibernate.dialect", dialect);
@@ -81,5 +83,13 @@ public class DatabaseConfiguration {
     @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
         return new PersistenceExceptionTranslationPostProcessor();
+    }
+
+    /**
+     * @return a model mapper for conversion between entity <-> dto
+     */
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }

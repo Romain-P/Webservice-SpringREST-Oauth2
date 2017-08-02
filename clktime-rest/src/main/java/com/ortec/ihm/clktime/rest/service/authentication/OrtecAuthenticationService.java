@@ -1,8 +1,8 @@
 package com.ortec.ihm.clktime.rest.service.authentication;
 
 import com.lambdista.util.Try;
-import com.ortec.ihm.clktime.rest.model.dto.GlobalUser;
-import com.ortec.ihm.clktime.rest.repository.UserRepository;
+import com.ortec.ihm.clktime.rest.database.model.dto.UserDTO;
+import com.ortec.ihm.clktime.rest.database.repository.UserRepository;
 import fr.ortec.dsi.domaine.Utilisateur;
 import fr.ortec.dsi.securite.authentification.activedirectory.ADAuthentification;
 import fr.ortec.dsi.securite.authentification.services.Authentification;
@@ -43,24 +43,24 @@ public class OrtecAuthenticationService implements AuthenticationService{
      * @param password the assigned password
      * @return an optional of global user.
      */
-    public Optional<GlobalUser> loadByConnection(String username, String password) {
+    public Optional<UserDTO> loadByConnection(String username, String password) {
         Optional<Utilisateur> ldapUser = Try.apply(() -> authentication.getUtilisateur(username, password)).toOptional();
 
         return Optional.ofNullable(
                 ldapUser.map(ldap -> userRepository.findByUsername(username)
-                            .map((found) -> GlobalUser.of(ldap, found))
+                            .map((found) -> UserDTO.of(ldap, found))
                             .orElseGet(() -> ldapFirstConnection(ldap)))
                         .orElseGet(() -> userRepository.findByUsernameAndPassword(username, DigestUtils.sha256Hex(password))
-                        .map((found) -> GlobalUser.of(null, found))
+                        .map((found) -> UserDTO.of(null, found))
                         .orElse(null)));
     }
 
     /**
      * @param ldap an ortec active directory user.
-     * @return a GlobalUser an generate its model
+     * @return a UserDTO an generate its model
      */
-    private GlobalUser ldapFirstConnection(Utilisateur ldap) {
-        GlobalUser first_auth = GlobalUser.of(ldap);
+    private UserDTO ldapFirstConnection(Utilisateur ldap) {
+        UserDTO first_auth = UserDTO.of(ldap);
         userRepository.save(first_auth.getModel());
         return first_auth;
     }

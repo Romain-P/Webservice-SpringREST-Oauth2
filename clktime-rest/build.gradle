@@ -20,6 +20,7 @@ ext {
     javax_persistence = '1.0.2'
     hibernate = '5.2.10.Final'
     functionaltry = '0.3.1'
+    modelmapper = '1.1.0'
 }
 
 repositories {
@@ -59,6 +60,7 @@ dependencies {
     compile "org.hibernate:hibernate-core:$hibernate"
     compile "net.sourceforge.jtds:jtds:$jtds_sqlserver_driver"
     compile "com.lambdista:try:$functionaltry"
+    compile "org.modelmapper:modelmapper:$modelmapper"
     provided "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jackson"
     provided "org.projectlombok:lombok:$lombok"
 }

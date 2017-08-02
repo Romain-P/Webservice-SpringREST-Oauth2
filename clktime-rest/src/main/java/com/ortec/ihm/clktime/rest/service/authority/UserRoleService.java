@@ -1,13 +1,18 @@
 package com.ortec.ihm.clktime.rest.service.authority;
 
-import com.ortec.ihm.clktime.rest.model.dto.GlobalUser;
-import com.ortec.ihm.clktime.rest.model.entity.Role;
-import com.ortec.ihm.clktime.rest.repository.UserRepository;
+import com.google.common.collect.ImmutableSet;
+import com.ortec.ihm.clktime.rest.database.model.dto.UserDTO;
+import com.ortec.ihm.clktime.rest.database.model.entity.Role;
+import com.ortec.ihm.clktime.rest.database.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 /**
  * @Author: romain.pillot
@@ -23,10 +28,10 @@ public class UserRoleService {
     /**
      * Grant user rights.
      *
-     * @param user a GlobalUser (might be get by @Tokened)
+     * @param user a UserDTO (might be get by @Tokened)
      * @param role a role to grant.
      */
-    public void grantUser(GlobalUser user, Role role) {
+    public void grantUser(UserDTO user, Role role) {
         if (user.getModel().getRoles().contains(role))
             return;
         user.getModel().getRoles().add(role);
@@ -36,14 +41,26 @@ public class UserRoleService {
     /**
      * Demote user rights.
      *
-     * @param user a GlobalUser (might be get by @Tokened)
+     * @param user a UserDTO (might be get by @Tokened)
      * @param role a role to grant.
      */
-    public void demoteUser(GlobalUser user, Role role) {
+    public void demoteUser(UserDTO user, Role role) {
         if (!user.getModel().getRoles().contains(role))
             return;
         user.getModel().getRoles().remove(role);
         refreshConnection(user);
+    }
+
+    /**
+     * Do not call for grant or remote roles.
+     *
+     * @return the model list transformed to an immutable set of GrantedAuthority.
+     *         This method might be be called to create a new Authentication.
+     */
+    public ImmutableSet<GrantedAuthority> mapToAppRoles(Set<Role> roles) {
+        return roles.stream()
+                .map(x -> new SimpleGrantedAuthority(x.getName()))
+                .collect(ImmutableSet.toImmutableSet());
     }
 
     /**
@@ -52,8 +69,9 @@ public class UserRoleService {
      *
      * @param user user to refresh
      */
-    private void refreshConnection(GlobalUser user) {
-        Authentication refreshed = new UsernamePasswordAuthenticationToken(user, null, user.getRoles());
+    private void refreshConnection(UserDTO user) {
+        Authentication refreshed = new UsernamePasswordAuthenticationToken(user, null,
+                mapToAppRoles(user.getModel().getRoles()));
         SecurityContextHolder.getContext().setAuthentication(refreshed);
     }
 }

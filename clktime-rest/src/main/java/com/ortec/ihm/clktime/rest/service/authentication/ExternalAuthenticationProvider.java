@@ -1,6 +1,7 @@
 package com.ortec.ihm.clktime.rest.service.authentication;
 
-import com.ortec.ihm.clktime.rest.model.dto.GlobalUser;
+import com.ortec.ihm.clktime.rest.database.model.dto.UserDTO;
+import com.ortec.ihm.clktime.rest.service.authority.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,7 +11,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * @Author: romain.pillot
@@ -21,6 +21,9 @@ public class ExternalAuthenticationProvider implements AuthenticationProvider, S
 
     @Autowired
     AuthenticationService authenticationService;
+
+    @Autowired
+    UserRoleService userRoleService;
 
     /**
      * Perform a connection by username and password.
@@ -34,12 +37,13 @@ public class ExternalAuthenticationProvider implements AuthenticationProvider, S
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        GlobalUser user = authenticationService
+        UserDTO user = authenticationService
                 .loadByConnection(name, password)
                 .orElseThrow(() ->
                         new BadCredentialsException(String.format("Bad user/pass for %s", name)));
 
-        return new UsernamePasswordAuthenticationToken(user, null, user.getRoles());
+        return new UsernamePasswordAuthenticationToken(user, null,
+                userRoleService.mapToAppRoles(user.getModel().getRoles()));
     }
 
     /**
