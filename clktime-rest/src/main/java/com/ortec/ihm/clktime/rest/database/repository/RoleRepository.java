@@ -1,5 +1,6 @@
 package com.ortec.ihm.clktime.rest.database.repository;
 
+import com.ortec.ihm.clktime.rest.database.model.entity.Role;
 import com.ortec.ihm.clktime.rest.database.model.entity.User;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.repository.CrudRepository;
@@ -13,7 +14,4 @@ import java.util.Optional;
  */
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Integer> {
-    Optional<User> findByUsername(String username);
-    Optional<User> findByUsernameAndPassword(String username, String password);
-}
+public interface RoleRepository extends CrudRepository<Role, Integer> {}
