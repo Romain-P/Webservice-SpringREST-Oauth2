@@ -12,7 +12,7 @@ public interface CrudDTO<D> {
     Optional<D> findById(int id);
     List<D> findAll();
 
-    void create(D dto);
+    void create(D dto, boolean hasId);
     void update(D dto);
     void delete(D dto);
     void deleteById(int id);

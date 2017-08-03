@@ -2,7 +2,6 @@ package com.ortec.ihm.clktime.rest.controller;
 
 import com.ortec.ihm.clktime.rest.configuration.annotation.Tokened;
 import com.ortec.ihm.clktime.rest.database.RoleRepositoryImpl;
-import com.ortec.ihm.clktime.rest.database.model.dto.RoleDTO;
 import com.ortec.ihm.clktime.rest.database.model.dto.UserDTO;
 import com.ortec.ihm.clktime.rest.service.authority.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ public class AuthenticationController {
 
     @RequestMapping("/test")
     public UserDTO message(@Tokened UserDTO user){
-        roleService.grantUser(user, new RoleDTO(1, "admin"));
         return user;
     }
 
@@ -32,4 +30,6 @@ public class AuthenticationController {
     public String hello(){
         return "Ortec restful application";
     }
+
+    public static void main(String args[]) {}
 }

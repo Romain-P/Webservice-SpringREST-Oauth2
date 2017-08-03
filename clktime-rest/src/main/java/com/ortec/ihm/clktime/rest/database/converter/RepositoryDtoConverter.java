@@ -1,6 +1,7 @@
 package com.ortec.ihm.clktime.rest.database.converter;
 
 import com.google.common.collect.Streams;
+import com.ortec.ihm.clktime.rest.util.ReflectUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.modelmapper.ModelMapper;
@@ -48,8 +49,15 @@ public abstract class RepositoryDtoConverter<E, D> implements CrudDTO<D> {
                 .collect(Collectors.toList());
     }
 
-    public void create(D dto){
-        repository.save(converter.fromDto(dto));
+    public void create(final D dto, boolean hasId) {
+        E entity = converter.fromDto(dto);
+        repository.save(entity);
+
+        if (!hasId) return;
+
+        /* Used reflection to don't add multiple verbose interfaces too dto/entities */
+        ReflectUtil.get(entity, "getId")
+                .ifPresent(id -> ReflectUtil.set(dto, "setId", id));
     }
 
     public void update(D dto){

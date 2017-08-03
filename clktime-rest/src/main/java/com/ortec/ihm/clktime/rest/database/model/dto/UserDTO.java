@@ -1,5 +1,6 @@
 package com.ortec.ihm.clktime.rest.database.model.dto;
 
+import com.google.common.collect.Sets;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -12,10 +13,9 @@ import java.util.*;
 
 @Accessors(chain = true)
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public final class UserDTO {
-    private Set<RoleDTO> roles;
+    private final Set<RoleDTO> roles = Sets.newHashSet();
+    private Integer id;
     private String username;
     private String name;
     private String lastname;

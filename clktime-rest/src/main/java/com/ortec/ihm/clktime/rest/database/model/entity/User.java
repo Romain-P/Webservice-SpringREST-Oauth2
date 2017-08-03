@@ -20,6 +20,10 @@ public class User {
     private Integer id;
     private String username;
     private String password;
+    private String name;
+    private String lastname;
+    private byte[] avatar;
+    private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_assign",

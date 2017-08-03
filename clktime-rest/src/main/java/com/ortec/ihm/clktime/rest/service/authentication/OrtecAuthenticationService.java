@@ -3,7 +3,6 @@ package com.ortec.ihm.clktime.rest.service.authentication;
 import com.lambdista.util.Try;
 import com.ortec.ihm.clktime.rest.database.UserRepositoryImpl;
 import com.ortec.ihm.clktime.rest.database.model.dto.UserDTO;
-import com.ortec.ihm.clktime.rest.database.repository.UserRepository;
 import fr.ortec.dsi.domaine.Utilisateur;
 import fr.ortec.dsi.securite.authentification.activedirectory.ADAuthentification;
 import fr.ortec.dsi.securite.authentification.services.Authentification;
@@ -66,7 +65,7 @@ public class OrtecAuthenticationService implements AuthenticationService{
         first_auth.setLastname(ldap.getNom());
         first_auth.setName(ldap.getPrenom());
 
-        userRepository.update(first_auth);
+        userRepository.create(first_auth, true);
         return first_auth;
     }
 }

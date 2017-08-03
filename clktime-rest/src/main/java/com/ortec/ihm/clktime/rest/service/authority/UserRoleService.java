@@ -4,8 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import com.ortec.ihm.clktime.rest.database.UserRepositoryImpl;
 import com.ortec.ihm.clktime.rest.database.model.dto.RoleDTO;
 import com.ortec.ihm.clktime.rest.database.model.dto.UserDTO;
-import com.ortec.ihm.clktime.rest.database.model.entity.Role;
-import com.ortec.ihm.clktime.rest.database.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

@@ -52,9 +52,12 @@ public class UserRepositoryImpl extends RepositoryDtoConverter<User, UserDTO> {
 
             @Override
             public UserDTO fromEntity(User entity) {
-                return getDto(entity).setRoles(entity.getRoles().stream()
+                UserDTO dto = getDto(entity);
+
+                dto.getRoles().addAll(entity.getRoles().stream()
                         .map(x -> convert(x, RoleDTO.class))
                         .collect(Collectors.toSet()));
+                return dto;
             }
         };
     }

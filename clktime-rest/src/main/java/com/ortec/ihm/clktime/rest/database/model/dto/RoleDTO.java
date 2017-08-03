@@ -1,8 +1,6 @@
 package com.ortec.ihm.clktime.rest.database.model.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -12,9 +10,7 @@ import lombok.experimental.Accessors;
 
 @Accessors(chain = true)
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class RoleDTO {
-    private int id;
+public final class RoleDTO {
+    private Integer id;
     private String name;
 }
