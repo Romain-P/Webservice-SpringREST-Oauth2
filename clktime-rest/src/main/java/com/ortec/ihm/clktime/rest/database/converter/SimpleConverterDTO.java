@@ -2,6 +2,7 @@ package com.ortec.ihm.clktime.rest.database.converter;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.modelmapper.ModelMapper;
 
 /**
@@ -10,12 +11,13 @@ import org.modelmapper.ModelMapper;
  */
 
 @Getter(AccessLevel.PROTECTED)
-public class DefaultConverterDTO<E, D> implements DTOConverter<E, D> {
+@Accessors(fluent = true)
+public class SimpleConverterDTO<E, D> implements DTOConverter<E, D> {
     private final ModelMapper mapper;
     private final Class<E> entityClass;
     private final Class<D> dtoClass;
 
-    public DefaultConverterDTO(ModelMapper mapper, Class<E> entityClass, Class<D> dtoClass) {
+    public SimpleConverterDTO(ModelMapper mapper, Class<E> entityClass, Class<D> dtoClass) {
         this.mapper = mapper;
         this.entityClass = entityClass;
         this.dtoClass = dtoClass;

@@ -43,7 +43,7 @@ public class ExternalAuthenticationProvider implements AuthenticationProvider, S
                         new BadCredentialsException(String.format("Bad user/pass for %s", name)));
 
         return new UsernamePasswordAuthenticationToken(user, null,
-                userRoleService.mapToAppRoles(user.getModel().getRoles()));
+                userRoleService.mapToAppRoles(user.getRoles()));
     }
 
     /**

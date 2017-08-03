@@ -1,6 +1,7 @@
 package com.ortec.ihm.clktime.rest.service.authentication;
 
 import com.lambdista.util.Try;
+import com.ortec.ihm.clktime.rest.database.UserRepositoryImpl;
 import com.ortec.ihm.clktime.rest.database.model.dto.UserDTO;
 import com.ortec.ihm.clktime.rest.database.repository.UserRepository;
 import fr.ortec.dsi.domaine.Utilisateur;
@@ -21,10 +22,10 @@ import java.util.Optional;
 @Service
 public class OrtecAuthenticationService implements AuthenticationService{
     private final Authentification authentication;
-    private final UserRepository userRepository;
+    private final UserRepositoryImpl userRepository;
 
     @Autowired
-    public OrtecAuthenticationService(UserRepository userRepository,
+    public OrtecAuthenticationService(UserRepositoryImpl userRepository,
                                       @Value("${login-service.url}") String remoteAddress,
                                       @Value("${login-service.domain}") String baseDomain,
                                       @Value("${login-service.authentication-type}") String authenticationType)
@@ -48,10 +49,8 @@ public class OrtecAuthenticationService implements AuthenticationService{
 
         return Optional.ofNullable(
                 ldapUser.map(ldap -> userRepository.findByUsername(username)
-                            .map((found) -> UserDTO.of(ldap, found))
                             .orElseGet(() -> ldapFirstConnection(ldap)))
                         .orElseGet(() -> userRepository.findByUsernameAndPassword(username, DigestUtils.sha256Hex(password))
-                        .map((found) -> UserDTO.of(null, found))
                         .orElse(null)));
     }
 
@@ -60,8 +59,14 @@ public class OrtecAuthenticationService implements AuthenticationService{
      * @return a UserDTO an generate its model
      */
     private UserDTO ldapFirstConnection(Utilisateur ldap) {
-        UserDTO first_auth = UserDTO.of(ldap);
-        userRepository.save(first_auth.getModel());
+        UserDTO first_auth = new UserDTO();
+        first_auth.setUsername(ldap.getUsername());
+        first_auth.setAvatar(ldap.getAvatar());
+        first_auth.setEmail(ldap.getEmail());
+        first_auth.setLastname(ldap.getNom());
+        first_auth.setName(ldap.getPrenom());
+
+        userRepository.update(first_auth);
         return first_auth;
     }
 }

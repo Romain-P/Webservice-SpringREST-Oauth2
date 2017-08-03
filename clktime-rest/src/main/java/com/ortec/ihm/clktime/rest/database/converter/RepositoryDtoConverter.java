@@ -65,6 +65,6 @@ public abstract class RepositoryDtoConverter<E, D> implements CrudDTO<D> {
     }
 
     protected DTOConverter<E, D> defineConverter(ModelMapper mapper, Class<E> entityClass, Class<D> dtoClass) {
-        return new DefaultConverterDTO<>(mapper, entityClass, dtoClass);
+        return new SimpleConverterDTO<>(mapper, entityClass, dtoClass);
     }
 }

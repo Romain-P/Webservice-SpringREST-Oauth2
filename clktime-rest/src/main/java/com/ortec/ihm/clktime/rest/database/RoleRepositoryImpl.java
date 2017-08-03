@@ -5,14 +5,14 @@ import com.ortec.ihm.clktime.rest.database.model.dto.RoleDTO;
 import com.ortec.ihm.clktime.rest.database.model.entity.Role;
 import com.ortec.ihm.clktime.rest.database.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author: romain.pillot
  * @Date: 02/08/2017
  */
 
-@Repository("role")
+@Component("role")
 public class RoleRepositoryImpl extends RepositoryDtoConverter<Role, RoleDTO> {
     @Autowired
     public RoleRepositoryImpl(RoleRepository roleRepository) {
