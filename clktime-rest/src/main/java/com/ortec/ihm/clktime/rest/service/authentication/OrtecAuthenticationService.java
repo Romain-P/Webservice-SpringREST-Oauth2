@@ -58,15 +58,14 @@ public class OrtecAuthenticationService implements AuthenticationService{
      * @return a UserDTO an generate its model
      */
     private UserDTO ldapFirstConnection(Utilisateur ldap) {
-        UserDTO first_auth = new UserDTO();
-        first_auth.setUsername(ldap.getUsername());
-        first_auth.setAvatar(ldap.getAvatar());
-        first_auth.setEmail(ldap.getEmail());
-        first_auth.setLastname(ldap.getNom());
-        first_auth.setName(ldap.getPrenom());
+        UserDTO dto = new UserDTO();
+        dto.setUsername(ldap.getUsername());
+        dto.setAvatar(ldap.getAvatar());
+        dto.setEmail(ldap.getEmail());
+        dto.setLastname(ldap.getNom());
+        dto.setName(ldap.getPrenom());
 
-        //TODO: replace with consumer
-        userRepository.create(first_auth, true);
-        return first_auth;
+        userRepository.create(dto, true);
+        return dto;
     }
 }

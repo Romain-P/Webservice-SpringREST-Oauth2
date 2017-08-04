@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * @param <D> Dto
  */
 @Getter(AccessLevel.PROTECTED)
-public abstract class RepositoryDtoConverter<E, D> implements CrudDTO<D> {
+public abstract class CrudRepositoryDtoConverter<E, D> implements CrudDTO<D> {
     private DTOConverter<E, D> converter;
     private final Class<E> entityClass;
     private final Class<D> dtoClass;
@@ -44,7 +44,7 @@ public abstract class RepositoryDtoConverter<E, D> implements CrudDTO<D> {
      * @param entityClass the entity class (same than the generic type)
      * @param dtoClass the dto class (same than the generic type)
      */
-    public RepositoryDtoConverter(CrudRepository<E, Integer> repository, Class<E> entityClass, Class<D> dtoClass) {
+    public CrudRepositoryDtoConverter(CrudRepository<E, Integer> repository, Class<E> entityClass, Class<D> dtoClass) {
         this.entityClass = entityClass;
         this.dtoClass = dtoClass;
         this.repository = repository;
@@ -163,9 +163,8 @@ public abstract class RepositoryDtoConverter<E, D> implements CrudDTO<D> {
 
     /**
      * Might be overridden if the convertEntity fields differs from the convertDto ones.
-     * Provide default, a SimpleConverterDTO that maps dto <-> entity with a simple model mapper.
+     * By default, a simple conversion will be applied with the model mapper.
      *
-     * @return the DTOConverter used by this wrapper.
      */
     protected void defineConverter(ConverterBuilder<E, D> builder, Converter converter) {}
 }
