@@ -8,6 +8,11 @@ import java.util.Optional;
  * @Date: 03/08/2017
  */
 
+/**
+ * Overlay of spring data basic CRUD for conversion between entity <-> dto
+ *
+ * @param <D> Dto Object
+ */
 public interface CrudDTO<D> {
     Optional<D> findById(int id);
     List<D> findAll();

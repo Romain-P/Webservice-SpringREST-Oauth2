@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @Date: 02/08/2017
  */
 
-@Component("role")
+@Component("DtoRoleRepository")
 public class RoleRepositoryImpl extends RepositoryDtoConverter<Role, RoleDTO> {
     @Autowired
     public RoleRepositoryImpl(RoleRepository roleRepository) {

@@ -65,6 +65,7 @@ public class OrtecAuthenticationService implements AuthenticationService{
         first_auth.setLastname(ldap.getNom());
         first_auth.setName(ldap.getPrenom());
 
+        //TODO: replace with consumer
         userRepository.create(first_auth, true);
         return first_auth;
     }

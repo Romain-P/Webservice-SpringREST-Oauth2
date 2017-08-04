@@ -1,14 +1,11 @@
 package com.ortec.ihm.clktime.rest.database;
 
-import com.ortec.ihm.clktime.rest.database.converter.CustomConverterDTO;
-import com.ortec.ihm.clktime.rest.database.converter.DTOConverter;
 import com.ortec.ihm.clktime.rest.database.converter.RepositoryDtoConverter;
 import com.ortec.ihm.clktime.rest.database.model.dto.RoleDTO;
 import com.ortec.ihm.clktime.rest.database.model.dto.UserDTO;
 import com.ortec.ihm.clktime.rest.database.model.entity.Role;
 import com.ortec.ihm.clktime.rest.database.model.entity.User;
 import com.ortec.ihm.clktime.rest.database.repository.UserRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +17,7 @@ import java.util.stream.Collectors;
  * @Date: 02/08/2017
  */
 
-@Component("user")
+@Component("DtoUserRepository")
 public class UserRepositoryImpl extends RepositoryDtoConverter<User, UserDTO> {
     private final UserRepository userRepository;
 
@@ -41,24 +38,13 @@ public class UserRepositoryImpl extends RepositoryDtoConverter<User, UserDTO> {
     }
 
     @Override
-    protected DTOConverter<User, UserDTO> defineConverter(ModelMapper mapper, Class<User> user, Class<UserDTO> dto) {
-        return new CustomConverterDTO<User, UserDTO>(mapper, user, dto) {
-            @Override
-            public User fromDto(UserDTO dto) {
-                return getEntity(dto).setRoles(dto.getRoles().stream()
-                        .map(x -> convert(x, Role.class))
-                        .collect(Collectors.toSet()));
-            }
-
-            @Override
-            public UserDTO fromEntity(User entity) {
-                UserDTO dto = getDto(entity);
-
-                dto.getRoles().addAll(entity.getRoles().stream()
-                        .map(x -> convert(x, RoleDTO.class))
-                        .collect(Collectors.toSet()));
-                return dto;
-            }
-        };
+    protected void defineConverter(ConverterBuilder<User, UserDTO> builder, Converter converter) {
+        builder
+                .convertEntity((entity, dto) -> dto.getRoles().addAll(entity.getRoles().stream()
+                        .map(x -> converter.convert(x, RoleDTO.class))
+                        .collect(Collectors.toSet())))
+                .convertDto((dto, entity) -> entity.setRoles(dto.getRoles().stream()
+                        .map(x -> converter.convert(x, Role.class))
+                        .collect(Collectors.toSet())));
     }
 }
