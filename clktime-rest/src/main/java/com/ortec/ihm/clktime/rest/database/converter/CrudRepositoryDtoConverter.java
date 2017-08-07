@@ -10,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.annotation.PostConstruct;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -158,6 +161,14 @@ public abstract class CrudRepositoryDtoConverter<E, D> implements CrudDTO<D> {
          */
         public <S, T> T convert(S from, Class<T> to) {
             return mapper.map(from, to);
+        }
+
+        public <S, T> Set<T> toSet(Collection<S> from, Class<T> to) {
+            return from.stream().map(x -> mapper.map(from, to)).collect(Collectors.toSet());
+        }
+
+        public <S, T> List<T> toList(Collection<S> from, Class<T> to) {
+            return from.stream().map(x -> mapper.map(from, to)).collect(Collectors.toList());
         }
     }
 

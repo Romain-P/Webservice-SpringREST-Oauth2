@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @Author: romain.pillot
@@ -40,11 +39,7 @@ public class UserRepositoryImpl extends CrudRepositoryDtoConverter<User, UserDTO
     @Override
     protected void defineConverter(ConverterBuilder<User, UserDTO> builder, Converter converter) {
         builder
-                .convertEntity((entity, dto) -> dto.getRoles().addAll(entity.getRoles().stream()
-                        .map(x -> converter.convert(x, RoleDTO.class))
-                        .collect(Collectors.toSet())))
-                .convertDto((dto, entity) -> entity.setRoles(dto.getRoles().stream()
-                        .map(x -> converter.convert(x, Role.class))
-                        .collect(Collectors.toSet())));
+                .convertEntity((entity, dto) -> dto.getRoles().addAll(converter.toSet(entity.getRoles(), RoleDTO.class)))
+                .convertDto((dto, entity) -> entity.setRoles(converter.toSet(dto.getRoles(), Role.class)));
     }
 }
