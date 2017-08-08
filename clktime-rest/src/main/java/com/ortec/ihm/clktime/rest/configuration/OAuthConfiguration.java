@@ -17,6 +17,10 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 public class OAuthConfiguration {
@@ -30,7 +34,7 @@ public class OAuthConfiguration {
 		 */
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests().antMatchers("/").permitAll().anyRequest().authenticated();
+            http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/test").authenticated();
 		}
 	}
 
@@ -56,6 +60,17 @@ public class OAuthConfiguration {
 		 */
 		@Override
 		public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+			endpoints.addInterceptor(new HandlerInterceptorAdapter() {
+				@Override
+				public boolean preHandle(HttpServletRequest hsr, HttpServletResponse rs, Object o) throws Exception {
+					rs.setHeader("Access-Control-Allow-Origin", "*");
+					rs.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+					rs.setHeader("Access-Control-Max-Age", "3600");
+					rs.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+					return true;
+				}
+			});
+
 			endpoints
 				.pathMapping("/oauth/token", tokenUrl)
 				.tokenStore(this.tokenStore)
