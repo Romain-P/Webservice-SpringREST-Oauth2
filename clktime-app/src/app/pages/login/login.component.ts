@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
+import {ChangeDetectorRef, Component, ApplicationRef} from '@angular/core';
 import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import {AuthenticationService} from "../../services/authentication/authentication.service";
 import { Router } from '@angular/router';
-import {Observable} from "rxjs/Observable";
+import 'rxjs/add/observable/throw';
 
 @Component({
   selector: 'login',
@@ -14,7 +14,8 @@ export class Login {
   public form:FormGroup;
   public email:AbstractControl;
   public password:AbstractControl;
-  public submitted:boolean = false;
+  public submitted:boolean;
+  private authError:string;
 
   constructor(fb:FormBuilder, private loginService:AuthenticationService, private router: Router) {
     this.form = fb.group({
@@ -26,18 +27,11 @@ export class Login {
     this.password = this.form.controls['password'];
   }
 
-  public onSubmit(values: Object):void {
+  public onSubmit(values: Object): void {
     this.submitted = true;
-    this.loginService.authenticate(values['email'], values['password'],
-      () => this.router.navigateByUrl("/dashboard"), this.onFailure);
-  }
-
-  public onFailure(error: any) {
-    let msg = error.message ? error.message
-      : error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-
-    alert(msg);
-
-    return Observable.throw(msg);
+    this.loginService.authenticate(values['email'], values['password']).subscribe(
+      () => this.router.navigateByUrl("/pages/dashboard"),
+      () => this.authError = "Invalid username or password"
+    );
   }
 }

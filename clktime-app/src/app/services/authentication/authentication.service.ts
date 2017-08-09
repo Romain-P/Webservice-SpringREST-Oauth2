@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers} from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-import { Router } from '@angular/router';
-import {User} from "../../models/User";
-import {error} from "selenium-webdriver";
-import {ObservableInput} from "rxjs/Observable";
+import 'rxjs/add/operator/catch';
+import "rxjs/add/operator/mergeMap";
+import "rxjs/add/operator/do";
+import {isNullOrUndefined} from "util";
 
 @Injectable()
 export class AuthenticationService {
@@ -20,27 +20,25 @@ export class AuthenticationService {
     "Authorization": "Basic " + btoa(AuthenticationService.clientId + ":" + AuthenticationService.clientSecret)
   });
 
-  constructor(private http: Http, private router: Router) {}
+  constructor(private http: Http) {}
 
-  public authenticate(username: string,
-                      password: string,
-                      onSuccess: () => void,
-                      onFailure: (err: any, caught: Observable<any>) => Observable<any>): void
-  {
+  public authenticate(username: string, password: string): Observable<any> {
     let client = "username=" +username + "&password=" +password + "&grant_type=password&scope=read%20write&" +
       "client_secret="+AuthenticationService.clientSecret+"&client_id="+AuthenticationService.clientId;
 
-    this.http.post(AuthenticationService.tokenUrl, client, {headers: AuthenticationService.authHeaders})
-      .catch(onFailure)
-      .flatMap(response => {
-        localStorage.setItem('token', response.json().access_token);
-        return this.http.get(AuthenticationService.userPath, {headers: this.getRequestHeader()});
+    return this.http.post(AuthenticationService.tokenUrl, client, {headers: AuthenticationService.authHeaders})
+      .map(response => response.json())
+      .do(json => {
+        localStorage.setItem('token', json.access_token);
+        localStorage.setItem('expiration_date', ((Date.now() / 1000) + json.expires_in));
       })
-      .do(request => {
-        localStorage.setItem('user', request.json())
-        onSuccess();
-      })
-      .subscribe();
+      .mergeMap(json => this.http.get(AuthenticationService.userPath, {headers: this.getRequestHeader()}))
+      .do(request => localStorage.setItem('user', request.json()));
+  }
+
+  public validToken(): boolean {
+    return !isNullOrUndefined(localStorage.getItem('token')) &&
+      Date.now() / 1000 < +localStorage.getItem('expiration_date');
   }
 
   public getRequestHeader(): Headers {
@@ -49,6 +47,7 @@ export class AuthenticationService {
 
   public logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('expiration_date');
     localStorage.removeItem('user');
   }
 }

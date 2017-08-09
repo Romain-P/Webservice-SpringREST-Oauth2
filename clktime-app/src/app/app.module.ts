@@ -18,6 +18,7 @@ import { NgaModule } from './theme/nga.module';
 import { PagesModule } from './pages/pages.module';
 import {AuthenticationService} from "./services/authentication/authentication.service";
 import {HttpService} from "./services/http/http.service";
+import {AuthenticationGuard, LoggedGuard} from "./services/authentication/gard.service";
 
 
 // Application wide providers
@@ -28,6 +29,8 @@ const APP_PROVIDERS = [
 
 const APP_SERVICES = [
   AuthenticationService,
+  AuthenticationGuard,
+  LoggedGuard,
   HttpService
 ];
 
