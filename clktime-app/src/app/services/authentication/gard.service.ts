@@ -25,7 +25,7 @@ export class LoggedGuard implements CanActivate {
     if (!this.authService.validToken())
       return true;
 
-    this.router.navigateByUrl("/pages/dashboard");
+    this.router.navigateByUrl("/user/dashboard");
     return false;
   }
 }

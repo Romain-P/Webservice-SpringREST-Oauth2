@@ -1,6 +1,6 @@
 package com.ortec.ihm.clktime.rest.database.model.dto;
 
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
  */
 
 @Accessors(chain = true)
-@Data
+@Getter @Setter
 public final class RoleDTO {
     private Integer id;
     private String name;

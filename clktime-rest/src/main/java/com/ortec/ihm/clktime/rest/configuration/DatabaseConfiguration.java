@@ -1,6 +1,12 @@
 package com.ortec.ihm.clktime.rest.configuration;
 
+import com.google.common.collect.Maps;
+import com.ortec.ihm.clktime.rest.database.converter.DTOConverter;
+import org.joda.time.DateTime;
+import org.modelmapper.AbstractConverter;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,9 +19,12 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.context.annotation.ApplicationScope;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Date;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -90,6 +99,20 @@ public class DatabaseConfiguration {
      */
     @Bean
     public ModelMapper modelMapper() {
-        return new ModelMapper();
+        ModelMapper mapper = new ModelMapper();
+
+        Converter<Date, Long> dateTimeConverter = new AbstractConverter<Date, Long>() {
+            protected Long convert(Date source) {
+                return source == null ? 0 : source.getTime();
+            }
+        };
+
+        mapper.addConverter(dateTimeConverter);
+        return mapper;
+    }
+
+    @Bean
+    public Map<Class<?>, DTOConverter> dtoConverters() {
+        return Maps.newConcurrentMap();
     }
 }

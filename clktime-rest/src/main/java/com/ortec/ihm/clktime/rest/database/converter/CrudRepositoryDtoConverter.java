@@ -7,15 +7,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.annotation.PostConstruct;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -26,43 +23,45 @@ import java.util.stream.Collectors;
 /**
  * Might be extended if you need to create an overlay of a CRUDRepository,
  * working with DTO instead of the Entity directly.
- * This class performs conversions and calls methods from a simple CrudRepository (using Entity)
- * required in the constructor.
+ * This class performs conversions and calls methods from a simple CrudRepository (using Entity) given as generic <R>
  *
+ * @param <R> Repository interface
  * @param <E> Entity
  * @param <D> Dto
  */
 @Getter(AccessLevel.PROTECTED)
-public abstract class CrudRepositoryDtoConverter<E, D> implements CrudDTO<D> {
+public abstract class CrudRepositoryDtoConverter<R extends CrudRepository<E, Integer>, E, D> implements CrudDTO<D> {
     private DTOConverter<E, D> converter;
     private final Class<E> entityClass;
     private final Class<D> dtoClass;
-    private final CrudRepository<E, Integer> repository;
 
     @Autowired
     ModelMapper mapper;
 
+    @Autowired
+    @Qualifier("dtoConverters")
+    Map<Class<?>, DTOConverter<?, ?>> converters;
+
+    @Autowired
+    R repository;
+
     /**
-     * @param repository from spring data implementing CRUD pattern, performing requests with entities.
      * @param entityClass the entity class (same than the generic type)
      * @param dtoClass the dto class (same than the generic type)
      */
-    public CrudRepositoryDtoConverter(CrudRepository<E, Integer> repository, Class<E> entityClass, Class<D> dtoClass) {
+    public CrudRepositoryDtoConverter(Class<E> entityClass, Class<D> dtoClass) {
         this.entityClass = entityClass;
         this.dtoClass = dtoClass;
-        this.repository = repository;
     }
 
     /**
      * We initialize the converter with a ConverterBuilder.
-     * It provides a DSL, so reducing
+     * It provides a DSL, so reducing the verbosity
      */
     @PostConstruct
     public void initializeMapper() {
         ConverterBuilder<E, D> builder = new ConverterBuilder<>();
-        Converter converter = new Converter(mapper);
-
-        defineConverter(builder, converter);
+        Converters converter = new Converters(converters);
 
         this.converter = new CustomConverterDTO<E, D>(mapper, entityClass, dtoClass) {
             @Override
@@ -85,6 +84,8 @@ public abstract class CrudRepositoryDtoConverter<E, D> implements CrudDTO<D> {
                 return converted;
             }
         };
+        this.converters.put(entityClass, this.converter);
+        defineConverter(builder, converter);
     }
 
     /* overlay of Crud starts */
@@ -125,7 +126,7 @@ public abstract class CrudRepositoryDtoConverter<E, D> implements CrudDTO<D> {
     /* ends */
 
     /**
-     * Provides a DSL and reduces verbose to create a CustomConverterDTO.
+     * Provides a DSL and reduces verbosity to create a CustomConverterDTO.
      *
      * @param <E> Entity
      * @param <D> Dto
@@ -134,41 +135,32 @@ public abstract class CrudRepositoryDtoConverter<E, D> implements CrudDTO<D> {
         private BiConsumer<D, E> convertDto;
         private BiConsumer<E, D> convertEntity;
 
-        public ConverterBuilder<E, D> convertDto(BiConsumer<D, E> dto) {
-            this.convertDto = dto;
+        /**
+         * @param consumer a biconsumer (dto, entity). `entity` is a basic conversion of `dto`.
+         *            Do whatever you want on the entity to continue a custom conversion.
+         */
+        public ConverterBuilder<E, D> convertDto(BiConsumer<D, E> consumer) {
+            this.convertDto = consumer;
             return this;
         }
 
-        public ConverterBuilder<E, D> convertEntity(BiConsumer<E, D> entity) {
-            this.convertEntity = entity;
+        /**
+         * @param consumer a biconsumer (entity, dto). `dto` is a basic conversion of `entity`.
+         *            Do whatever you want on the dto to continue a custom conversion.
+         */
+        public ConverterBuilder<E, D> convertEntity(BiConsumer<E, D> consumer) {
+            this.convertEntity = consumer;
             return this;
         }
     }
 
     @RequiredArgsConstructor
-    protected static class Converter {
-        private final ModelMapper mapper;
+    protected static class Converters {
+        private final Map<Class<?>, DTOConverter<?, ?>> converters;
 
-        /**
-         * Create an instance of the class `to` from an instance `from`,
-         * Working with matching fields
-         *
-         * @param from object to convert
-         * @param to class generated
-         * @param <S> Entity or Dto type
-         * @param <T> Dto or Entity type
-         * @return
-         */
-        public <S, T> T convert(S from, Class<T> to) {
-            return mapper.map(from, to);
-        }
-
-        public <S, T> Set<T> toSet(Collection<S> from, Class<T> to) {
-            return from.stream().map(x -> mapper.map(from, to)).collect(Collectors.toSet());
-        }
-
-        public <S, T> List<T> toList(Collection<S> from, Class<T> to) {
-            return from.stream().map(x -> mapper.map(from, to)).collect(Collectors.toList());
+        @SuppressWarnings("unchecked")
+        public <E, D> DTOConverter<E, D> of(Class<E> entity, Class<D> dto) {
+            return (DTOConverter<E, D>) converters.get(entity.getClass());
         }
     }
 
@@ -177,5 +169,5 @@ public abstract class CrudRepositoryDtoConverter<E, D> implements CrudDTO<D> {
      * By default, a simple conversion will be applied with the model mapper.
      *
      */
-    protected void defineConverter(ConverterBuilder<E, D> builder, Converter converter) {}
+    protected void defineConverter(ConverterBuilder<E, D> builder, Converters converters) {}
 }

@@ -30,7 +30,7 @@ export class Login {
   public onSubmit(values: Object): void {
     this.submitted = true;
     this.loginService.authenticate(values['email'], values['password']).subscribe(
-      () => this.router.navigateByUrl("/pages/dashboard"),
+      () => this.router.navigateByUrl("/user/dashboard"),
       () => this.authError = "Invalid username or password"
     );
   }

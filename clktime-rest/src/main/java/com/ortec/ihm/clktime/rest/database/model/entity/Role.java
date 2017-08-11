@@ -1,6 +1,8 @@
 package com.ortec.ihm.clktime.rest.database.model.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
@@ -11,8 +13,8 @@ import javax.persistence.*;
  */
 @Entity
 @Accessors(chain = true)
-@Data
 @Table(name = "role_template")
+@Getter @Setter
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

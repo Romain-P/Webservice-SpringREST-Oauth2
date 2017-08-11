@@ -14,7 +14,7 @@ export const routes: Routes = [
     loadChildren: 'app/pages/login/login.module#LoginModule'
   },
   {
-    path: 'pages', canActivate: [AuthenticationGuard], children: [
+    path: 'user', canActivate: [AuthenticationGuard], children: [
     {
       path: '',
       component: Pages,

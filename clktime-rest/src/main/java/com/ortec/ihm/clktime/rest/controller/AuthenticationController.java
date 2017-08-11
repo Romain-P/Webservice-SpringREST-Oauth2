@@ -1,8 +1,11 @@
 package com.ortec.ihm.clktime.rest.controller;
 
 import com.ortec.ihm.clktime.rest.configuration.annotation.Tokened;
+import com.ortec.ihm.clktime.rest.database.ActivityRepositoryImpl;
 import com.ortec.ihm.clktime.rest.database.RoleRepositoryImpl;
+import com.ortec.ihm.clktime.rest.database.model.dto.ActivityDTO;
 import com.ortec.ihm.clktime.rest.database.model.dto.UserDTO;
+import com.ortec.ihm.clktime.rest.database.model.entity.Activity;
 import com.ortec.ihm.clktime.rest.service.authority.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,14 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthenticationController {
     @Autowired
-    RoleRepositoryImpl roleRepository;
+    ActivityRepositoryImpl activityRepository;
 
     @Autowired
     UserRoleService roleService;
 
     @RequestMapping("/test")
-    public UserDTO message(@Tokened UserDTO user){
-        return user;
+    public ActivityDTO message(@Tokened UserDTO user){
+        return activityRepository.findById(1).get();
     }
 
     @RequestMapping("/")

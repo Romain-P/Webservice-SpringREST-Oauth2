@@ -2,6 +2,11 @@ package com.ortec.ihm.clktime.rest.database.converter;
 
 import org.modelmapper.ModelMapper;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * @Author: romain.pillot
  * @Date: 03/08/2017
@@ -25,18 +30,6 @@ public abstract class CustomConverterDTO<E, D> implements DTOConverter<E, D> {
 
     /**
      * @param dto to convert
-     * @return an associated entity from the dto
-     */
-    public abstract E fromDto(D dto);
-
-    /**
-     * @param entity to convert
-     * @return an associated dto from the entity
-     */
-    public abstract D fromEntity(E entity);
-
-    /**
-     * @param dto to convert
      * @return the associated converted entity from the dto.
      *         Matching fields are sets by model mapping
      */
@@ -51,5 +44,13 @@ public abstract class CustomConverterDTO<E, D> implements DTOConverter<E, D> {
      */
     protected final D getDto(E entity) {
         return mapper.map(entity, dtoClass);
+    }
+
+    public final Set<D> fromEntity(Collection<E> from) {
+        return from.stream().map(this::fromEntity).collect(Collectors.toSet());
+    }
+
+    public final Set<E> fromDto(Collection<D> from) {
+        return from.stream().map(this::fromDto).collect(Collectors.toSet());
     }
 }
