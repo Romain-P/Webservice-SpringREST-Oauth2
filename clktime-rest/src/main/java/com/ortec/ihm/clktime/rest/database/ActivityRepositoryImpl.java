@@ -1,6 +1,6 @@
 package com.ortec.ihm.clktime.rest.database;
 
-import com.ortec.ihm.clktime.rest.database.converter.CrudRepositoryDtoConverter;
+import com.ortec.ihm.clktime.rest.common.database.CrudRepositoryDtoConverter;
 import com.ortec.ihm.clktime.rest.database.model.dto.ActivityDTO;
 import com.ortec.ihm.clktime.rest.database.model.entity.Activity;
 import com.ortec.ihm.clktime.rest.database.repository.ActivityRepository;

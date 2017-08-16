@@ -1,12 +1,10 @@
 package com.ortec.ihm.clktime.rest.configuration;
 
 import com.google.common.collect.Maps;
-import com.ortec.ihm.clktime.rest.database.converter.DTOConverter;
-import org.joda.time.DateTime;
+import com.ortec.ihm.clktime.rest.common.database.DTOConverter;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +17,6 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.context.annotation.ApplicationScope;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;

@@ -1,11 +1,9 @@
 package com.ortec.ihm.clktime.rest.database;
 
-import com.ortec.ihm.clktime.rest.database.converter.CrudRepositoryDtoConverter;
+import com.ortec.ihm.clktime.rest.common.database.CrudRepositoryDtoConverter;
 import com.ortec.ihm.clktime.rest.database.model.dto.RoleDTO;
 import com.ortec.ihm.clktime.rest.database.model.entity.Role;
 import com.ortec.ihm.clktime.rest.database.repository.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.cdi.Eager;
 import org.springframework.stereotype.Component;
 
 /**

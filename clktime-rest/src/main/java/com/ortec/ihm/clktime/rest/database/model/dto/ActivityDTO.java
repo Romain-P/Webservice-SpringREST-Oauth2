@@ -14,7 +14,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @Getter @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class ActivityDTO {
+public final class ActivityDTO {
     private Integer id;
     private String name;
     private long creationDate;

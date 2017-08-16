@@ -1,14 +1,9 @@
 package com.ortec.ihm.clktime.rest.database;
 
-import com.ortec.ihm.clktime.rest.database.converter.CrudRepositoryDtoConverter;
-import com.ortec.ihm.clktime.rest.database.model.dto.ActivityDTO;
-import com.ortec.ihm.clktime.rest.database.model.dto.RoleDTO;
+import com.ortec.ihm.clktime.rest.common.database.CrudRepositoryDtoConverter;
 import com.ortec.ihm.clktime.rest.database.model.dto.UserDTO;
-import com.ortec.ihm.clktime.rest.database.model.entity.Activity;
-import com.ortec.ihm.clktime.rest.database.model.entity.Role;
 import com.ortec.ihm.clktime.rest.database.model.entity.User;
 import com.ortec.ihm.clktime.rest.database.repository.UserRepository;
-import org.springframework.data.repository.cdi.Eager;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.ortec.ihm.clktime.rest.database.converter;
+package com.ortec.ihm.clktime.rest.common.database;
 
 import com.google.common.collect.Streams;
 import com.ortec.ihm.clktime.rest.util.ReflectUtil;
@@ -91,7 +91,8 @@ public abstract class CrudRepositoryDtoConverter<R extends CrudRepository<E, Int
     /* overlay of Crud starts */
 
     public Optional<D> findById(int id) {
-        return Optional.ofNullable(converter.fromEntity(repository.findOne(id)));
+        E entity = repository.findOne(id);
+        return Optional.ofNullable(entity != null ? converter.fromEntity(repository.findOne(id)) : null);
     }
 
     public List<D> findAll(){

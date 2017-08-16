@@ -1,4 +1,4 @@
-package com.ortec.ihm.clktime.rest.database.converter;
+package com.ortec.ihm.clktime.rest.common.database;
 
 /**
  * @Author: romain.pillot

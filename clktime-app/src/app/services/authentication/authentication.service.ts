@@ -8,7 +8,7 @@ import {isNullOrUndefined} from "util";
 
 @Injectable()
 export class AuthenticationService {
-  private static readonly apiUrl = 'http://10.64.0.41:8080/clktime';
+  private static readonly apiUrl = 'http://localhost:8080';
   private static readonly tokenUrl = AuthenticationService.apiUrl + '/login/token';
   private static readonly userPath = AuthenticationService.apiUrl + '/test';
   private static readonly clientId ='clktime-app';
@@ -38,6 +38,7 @@ export class AuthenticationService {
 
   public validToken(): boolean {
     return !isNullOrUndefined(localStorage.getItem('token')) &&
+      !isNullOrUndefined(localStorage.getItem('expiration_date')) &&
       Date.now() / 1000 < +localStorage.getItem('expiration_date');
   }
 
