@@ -1,21 +1,22 @@
-## Angular 4 + SpringRest
+## Webservice with Spring REST
 
-A simple angular web app. Webservice with spring-rest that provides model data (that would be loaded from the database).  
-The webservice can also be called from any device, it avoids duplicated codes for loading data and security issues
+A Webservice with spring-rest that provides database models.
+The webservice can also be called from any authorized device and allowed user.
 
-## Oauth2 and Spring
+## Features and tools
 
-`Gradle` used as building tool, with latest release dependencies.  
-The app is totally `java configured` (no included xml) `without spring-boot`.  
-It provides a `custom AuthenticationProvider` to be able to perform yourself
-the connection check with a password (alternative of UserDetailsService that
-force to load an user from its username without password).
-
-`Spring-data-jpa` installed and configured with `SqlServer` (easy to change by the configuration file).
+ * **Gradle** - used as building tool with the latest release dependencies.
+ * **Java Configuration** - fully java configured without xml, `without spring-boot`
+ * **Swagger** - generates automatically your api with tests *(/swagger-ui.html)*
+ * **SpringREST** - using rest controllers with jackson to generate automatically json objects from dtos
+ * **SpringDATA** - spring data jpa for the persistence. It performs a nice code generation from interfaces
+ * **Custom Auth** - custom authentication to perform a connection via another webservice (ldap in this project)
+ * **CorsFilter** - configured to allow rest requests from anywhere.
+ * **Oauth 2** - provides a security layer by access token
+ * **ModelMapper** - used for conversions between entities/dto's. (Maps fields from multiples objects with recursion)
 
 ## Installation
 
-To install the rest, create a gradle module for the directory `clktime-rest`.  
-Then rename `.properties.dist` to `.properties`.  
+Rename resource `.properties.dist` to `.properties`.  
 Refresh dependencies, and create a `TomcatLocal` running configuration defining the app war.  
 I recommend Intellij.
