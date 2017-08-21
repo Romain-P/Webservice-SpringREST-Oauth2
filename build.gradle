@@ -1,4 +1,4 @@
-group 'com.ortec.clktime'
+group 'com.ortec.gta'
 version '1.0.0'
 
 apply plugin: 'java'
