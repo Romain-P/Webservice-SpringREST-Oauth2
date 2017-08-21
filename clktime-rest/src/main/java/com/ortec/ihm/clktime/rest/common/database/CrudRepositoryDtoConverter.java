@@ -95,10 +95,10 @@ public abstract class CrudRepositoryDtoConverter<R extends CrudRepository<E, Int
         return Optional.ofNullable(entity != null ? converter.fromEntity(repository.findOne(id)) : null);
     }
 
-    public List<D> findAll(){
+    public Set<D> findAll(){
         return Streams.stream(repository.findAll())
                 .map(x -> converter.fromEntity(x))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     public void create(final D dto, boolean hasId) {

@@ -1,7 +1,6 @@
 package com.ortec.ihm.clktime.rest.database.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -15,7 +14,6 @@ import java.util.Set;
 
 @Accessors(chain = true)
 @Getter @Setter
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public final class UserDTO {
     private Integer id;
     private String username;
@@ -23,7 +21,9 @@ public final class UserDTO {
     private String lastname;
     private byte[] avatar;
     private String email;
+    @JsonIgnoreProperties(value = {"activities", "activities"})
     private UserDTO superior;
     private Set<RoleDTO> roles;
+    @JsonIgnoreProperties(value = {"users"})
     private Set<ActivityDTO> activities;
 }

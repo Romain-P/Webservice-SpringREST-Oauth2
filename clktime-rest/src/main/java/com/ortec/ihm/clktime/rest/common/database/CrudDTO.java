@@ -1,7 +1,7 @@
 package com.ortec.ihm.clktime.rest.common.database;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @Author: romain.pillot
@@ -15,7 +15,7 @@ import java.util.Optional;
  */
 public interface CrudDTO<D> {
     Optional<D> findById(int id);
-    List<D> findAll();
+    Set<D> findAll();
 
     void create(D dto, boolean hasId);
     void update(D dto);

@@ -1,15 +1,10 @@
 package com.ortec.ihm.clktime.rest.configuration;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractDispatcherServletInitializer;
 
@@ -75,7 +70,7 @@ public class ServletInitializer extends AbstractDispatcherServletInitializer {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, HEAD, PUT, DELETE");
 			response.setHeader("Access-Control-Max-Age", "3600");
-			response.setHeader("Access-Control-Allow-Headers", "x-requested-with, authorization");
+			response.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 			if ("OPTIONS".equalsIgnoreCase(request.getMethod()))
 				response.setStatus(HttpServletResponse.SC_OK);

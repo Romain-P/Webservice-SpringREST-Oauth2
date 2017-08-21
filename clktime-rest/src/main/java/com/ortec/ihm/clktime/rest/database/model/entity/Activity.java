@@ -20,6 +20,7 @@ public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String code;
     private String name;
     @Column(name="creation_date")
     private Date creationDate;
@@ -42,4 +43,6 @@ public class Activity {
     @ManyToOne
     @JoinColumn(name="last_user_editor")
     private User lastEditor;
+
+    private boolean active;
 }

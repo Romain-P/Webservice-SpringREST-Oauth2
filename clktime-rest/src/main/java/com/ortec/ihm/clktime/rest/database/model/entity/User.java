@@ -13,7 +13,7 @@ import java.util.Set;
  */
 @Entity
 @Accessors(chain = true)
-@Table(name = "ortec_user")
+@Table(name = "user_detail")
 @Getter @Setter
 public class User {
     @Id
@@ -27,13 +27,13 @@ public class User {
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "role_assign",
+    @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "activity_assign",
+    @JoinTable(name = "user_activity",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "activity_id", referencedColumnName = "id"))
     private Set<Activity> activities;

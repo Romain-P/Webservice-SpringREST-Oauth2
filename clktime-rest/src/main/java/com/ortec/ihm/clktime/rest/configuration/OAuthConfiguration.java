@@ -64,7 +64,7 @@ public class OAuthConfiguration {
 				@Override
 				public boolean preHandle(HttpServletRequest hsr, HttpServletResponse rs, Object o) throws Exception {
 					rs.setHeader("Access-Control-Allow-Origin", "*");
-					rs.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+					rs.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST,OPTIONS");
 					rs.setHeader("Access-Control-Max-Age", "3600");
 					rs.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
 					return true;

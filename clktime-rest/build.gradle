@@ -22,6 +22,7 @@ ext {
     functionaltry = '0.3.1'
     modelmapper = '1.1.0'
     joda_time = '2.9.9'
+    swagger = '2.7.0'
 }
 
 repositories {
@@ -63,6 +64,8 @@ dependencies {
     compile "com.lambdista:try:$functionaltry"
     compile "org.modelmapper:modelmapper:$modelmapper"
     compile "joda-time:joda-time:$joda_time"
+    compile "io.springfox:springfox-swagger2:$swagger"
+    compile "io.springfox:springfox-swagger-ui:$swagger"
     provided "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jackson"
     provided "org.projectlombok:lombok:$lombok"
 }

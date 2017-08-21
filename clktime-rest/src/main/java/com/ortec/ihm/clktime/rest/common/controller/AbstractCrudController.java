@@ -1,44 +1,53 @@
 package com.ortec.ihm.clktime.rest.common.controller;
 
-import com.ortec.ihm.clktime.rest.common.database.CrudRepositoryDtoConverter;
+import com.ortec.ihm.clktime.rest.common.service.AbstractCrudService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 /**
  * @Author: romain.pillot
  * @Date: 16/08/2017
  */
-public abstract class AbstractCrudController<D, R extends CrudRepositoryDtoConverter<?, ?, D>> {
+public abstract class AbstractCrudController<D, S extends AbstractCrudService<D, ?>> {
 
     @Getter
     @Autowired
-    private R repository;
+    private S service;
 
-    @PostMapping("/")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public void create(@RequestBody D dto) {
-        repository.create(dto, true);
+        service.create(dto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Integer id) {
-        repository.deleteById(id);
+        service.delete(id);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<D> get(@PathVariable Integer id) {
-        return repository.findById(id)
+        return service.get(id)
                 .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping("/{dto}")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable D dto) {
-        repository.update(dto);
+    public Set<D> get() {
+        return service.get();
+    }
+
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@RequestBody D dto) {
+        service.update(dto);
     }
 }

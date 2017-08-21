@@ -3,6 +3,7 @@ package com.ortec.ihm.clktime.rest.controller;
 import com.ortec.ihm.clktime.rest.common.controller.AbstractCrudController;
 import com.ortec.ihm.clktime.rest.database.UserRepositoryImpl;
 import com.ortec.ihm.clktime.rest.database.model.dto.UserDTO;
+import com.ortec.ihm.clktime.rest.service.UserService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,4 +13,4 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/user")
-public class UserController extends AbstractCrudController<UserDTO, UserRepositoryImpl> {}
+public class UserController extends AbstractCrudController<UserDTO, UserService> {}

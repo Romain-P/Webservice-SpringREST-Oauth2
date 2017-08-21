@@ -97,14 +97,6 @@ public class DatabaseConfiguration {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper mapper = new ModelMapper();
-
-        Converter<Date, Long> dateTimeConverter = new AbstractConverter<Date, Long>() {
-            protected Long convert(Date source) {
-                return source == null ? 0 : source.getTime();
-            }
-        };
-
-        mapper.addConverter(dateTimeConverter);
         return mapper;
     }
 

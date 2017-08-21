@@ -1,5 +1,7 @@
 package com.ortec.ihm.clktime.rest.controller;
 
+import com.ortec.ihm.clktime.rest.common.user.TokenedUser;
+import com.ortec.ihm.clktime.rest.configuration.annotation.Tokened;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,10 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class MainController {
-
-    @RequestMapping("/")
-    public String hello(){
-        return "Ortec restful application";
+    @RequestMapping("/hello")
+    public TokenedUser hello(@Tokened TokenedUser user) {
+        return user;
     }
-
 }

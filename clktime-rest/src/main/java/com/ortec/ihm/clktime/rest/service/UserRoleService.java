@@ -1,4 +1,4 @@
-package com.ortec.ihm.clktime.rest.service.authority;
+package com.ortec.ihm.clktime.rest.service;
 
 import com.google.common.collect.ImmutableSet;
 import com.ortec.ihm.clktime.rest.database.UserRepositoryImpl;
