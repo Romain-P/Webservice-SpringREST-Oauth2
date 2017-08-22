@@ -14,6 +14,7 @@ The webservice can also be called from any authorized device and allowed user.
  * **CorsFilter** - configured to allow rest requests from anywhere.
  * **Oauth 2** - provides a security layer by access token
  * **ModelMapper** - used for conversions between entities/dto's. (Maps fields from multiples objects with recursion)
+ * **ehCache** - used to store database models (as a second-level cache). Data reloaded if they are updated
 
 ## Installation
 
