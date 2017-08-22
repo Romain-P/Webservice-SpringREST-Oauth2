@@ -28,7 +28,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "com.ortec.ihm.clktime.rest.database.repository")
+@EnableJpaRepositories(basePackages = "com.ortec.gta.database.repository")
 public class DatabaseConfiguration {
 
     /**
@@ -45,12 +45,14 @@ public class DatabaseConfiguration {
 
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan("com.ortec.ihm.clktime.rest.database.model.entity");
+        em.setPackagesToScan("com.ortec.gta.database.model.entity");
         em.setJpaVendorAdapter(vendorAdapter);
 
 
         Properties properties = new Properties();
         properties.setProperty("hibernate.dialect", dialect);
+        properties.setProperty("hibernate.cache.use_second_level_cache", "true");
+        properties.setProperty("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
         em.setJpaProperties(properties);
         return em;
     }

@@ -32,7 +32,7 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 @PropertySource("classpath:application.properties")
-@ComponentScan(basePackages = "com.ortec.ihm.clktime.rest")
+@ComponentScan(basePackages = "com.ortec.gta")
 public class ApplicationConfiguration extends WebMvcConfigurerAdapter{
 
     @Override

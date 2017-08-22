@@ -60,6 +60,7 @@ dependencies {
     compile "javax.persistence:persistence-api:$javax_persistence"
     compile "javax.servlet:javax.servlet-api:$servlet"
     compile "org.hibernate:hibernate-core:$hibernate"
+    compile "org.hibernate:hibernate-ehcache:$hibernate"
     compile "net.sourceforge.jtds:jtds:$jtds_sqlserver_driver"
     compile "com.lambdista:try:$functionaltry"
     compile "org.modelmapper:modelmapper:$modelmapper"
