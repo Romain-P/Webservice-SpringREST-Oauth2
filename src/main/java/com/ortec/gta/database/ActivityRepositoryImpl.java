@@ -18,8 +18,12 @@ public class ActivityRepositoryImpl extends CrudRepositoryDtoConverter<ActivityR
         super(Activity.class, ActivityDTO.class);
     }
 
-    public Set<ActivityDTO> findByActiveTrue() {
+    public Set<ActivityDTO> findActiveActivities() {
         return getConverter().fromEntity(getRepository().findByActiveTrue());
+    }
+
+    public Set<ActivityDTO> findParentActivities() {
+        return getConverter().fromEntity(getRepository().findByParentActivityIsNull());
     }
 
     @Override

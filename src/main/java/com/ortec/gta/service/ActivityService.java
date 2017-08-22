@@ -1,5 +1,6 @@
 package com.ortec.gta.service;
 
+import com.google.common.collect.Sets;
 import com.ortec.gta.common.service.AbstractCrudService;
 import com.ortec.gta.database.ActivityRepositoryImpl;
 import com.ortec.gta.database.model.dto.ActivityDTO;
@@ -11,6 +12,7 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @Author: romain.pillot
@@ -24,22 +26,29 @@ public class ActivityService extends AbstractCrudService<ActivityDTO, ActivityRe
 
     @Override
     public Set<ActivityDTO> get() {
-        return getRepository().findByActiveTrue().stream()
-                .sorted(Comparator.comparing(ActivityDTO::getId))
+        Set<ActivityDTO> actives = getRepository().findActiveActivities().stream()
+                .filter(activity -> activity.getParentActivity() == null)
+                .sorted((a, b) -> Long.compare(b.getSubActivities().stream().max(Comparator.comparing(ActivityDTO::getModificationDate)).orElse(b)
+                                .getModificationDate(), a.getSubActivities().stream().max(Comparator.comparing(ActivityDTO::getModificationDate)).orElse(a).getModificationDate()))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        return actives.stream().flatMap(set ->
+            Stream.concat(Stream.of(set), set.getSubActivities().stream()
+                    .sorted((a, b) -> Long.compare(b.getModificationDate(), a.getModificationDate())))
+        ).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Override
     public void update(ActivityDTO dto) {
         getRepository().findById(dto.getId()).ifPresent(stored ->
-            super.update(updateDto(dto, stored.getCreationDate(), System.currentTimeMillis(), -1)));
+            updateDto(dto, stored.getCreationDate(), System.currentTimeMillis(), -1));
     }
 
     @Override
     public void create(ActivityDTO dto) {
         long current = System.currentTimeMillis();
         dto.setActive(true);
-        super.create(updateDto(dto, current, current, 0));
+        updateDto(dto, current, current, 0);
     }
 
     @Override
@@ -50,15 +59,17 @@ public class ActivityService extends AbstractCrudService<ActivityDTO, ActivityRe
             long current = System.currentTimeMillis();
 
             stored.setActive(false);
-            super.update(updateDto(stored, stored.getCreationDate(), current, current));
+            updateDto(stored, stored.getCreationDate(), current, current);
         });
     }
 
-    private ActivityDTO updateDto(ActivityDTO dto, long create, long edit, long delete) {
+    private void updateDto(ActivityDTO dto, long create, long edit, long delete) {
         userService.get(SessionUtil.activeUser().getId()).ifPresent(dto::setLastEditor);
 
-        return dto.setCreationDate(create)
+        dto.setCreationDate(create)
                 .setModificationDate(edit)
                 .setDeletionDate(delete);
+
+        super.update(dto);
     }
 }
