@@ -51,14 +51,14 @@ public class ActivityService extends AbstractCrudService<ActivityDTO, ActivityRe
     @Override
     public void update(ActivityDTO dto) {
         getRepository().findById(dto.getId()).ifPresent(stored ->
-            updateDto(dto, stored.getCreationDate(), System.currentTimeMillis(), -1));
+            updateDto(dto, stored.getCreationDate(), System.currentTimeMillis(), -1, false));
     }
 
     @Override
     public void create(ActivityDTO dto) {
         long current = System.currentTimeMillis();
         dto.setActive(true);
-        updateDto(dto, current, current, 0);
+        updateDto(dto, current, current, -1, true);
     }
 
     @Override
@@ -69,17 +69,20 @@ public class ActivityService extends AbstractCrudService<ActivityDTO, ActivityRe
             long current = System.currentTimeMillis();
 
             stored.setActive(false);
-            updateDto(stored, stored.getCreationDate(), current, current);
+            updateDto(stored, stored.getCreationDate(), current, current, false);
         });
     }
 
-    private void updateDto(ActivityDTO dto, long create, long edit, long delete) {
+    private void updateDto(ActivityDTO dto, long creation, long edit, long delete, boolean create) {
         userService.get(SessionUtil.activeUser().getId()).ifPresent(dto::setLastEditor);
 
-        dto.setCreationDate(create)
+        dto.setCreationDate(creation)
                 .setModificationDate(edit)
                 .setDeletionDate(delete);
 
-        super.update(dto);
+        if (create)
+            super.create(dto);
+        else
+            super.update(dto);
     }
 }

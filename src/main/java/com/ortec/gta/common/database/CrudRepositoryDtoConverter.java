@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.annotation.PostConstruct;
+import java.io.Console;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
@@ -103,8 +104,7 @@ public abstract class CrudRepositoryDtoConverter<R extends CrudRepository<E, Int
 
     public void create(final D dto, boolean hasId) {
         E entity = converter.fromDto(dto);
-        repository.save(entity);
-
+        entity = repository.save(entity);
         if (!hasId) return;
 
         /* Used reflection to don't add multiple verbose interfaces to convertDto/entities */
