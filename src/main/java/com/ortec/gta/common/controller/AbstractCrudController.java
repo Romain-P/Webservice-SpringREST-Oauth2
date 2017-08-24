@@ -22,11 +22,12 @@ public abstract class AbstractCrudController<D, S extends AbstractCrudService<D,
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public void create(@RequestBody D dto) {
+    public D create(@RequestBody D dto) {
         service.create(dto);
+        return dto;
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Integer id) {
         service.delete(id);

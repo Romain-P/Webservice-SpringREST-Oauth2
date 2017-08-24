@@ -1,9 +1,11 @@
 package com.ortec.gta.database.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.collect.Sets;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -18,13 +20,14 @@ public final class ActivityDTO {
     private long creationDate;
     private long modificationDate;
     private long deletionDate;
+    @JsonIgnoreProperties(value = {"activities"})
     private UserDTO lastEditor;
     @JsonIgnoreProperties(value = {"subActivities", "users", "parentActivity"})
     private ActivityDTO parentActivity;
     @JsonIgnoreProperties(value = {"parentActivity"})
-    private Set<ActivityDTO> subActivities;
+    private Set<ActivityDTO> subActivities = new HashSet<>();
     @JsonIgnoreProperties(value = {"activities"})
-    private Set<UserDTO> users;
+    private Set<UserDTO> users = Sets.newHashSet();
     private String code;
     private boolean active;
 }

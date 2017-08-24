@@ -23,7 +23,12 @@ public class ActivityRepositoryImpl extends CrudRepositoryDtoConverter<ActivityR
     }
 
     public Set<ActivityDTO> findParentActivities() {
-        return getConverter().fromEntity(getRepository().findByParentActivityIsNull());
+        return getConverter().fromEntity(getRepository().findByParentActivityIsNullAndActiveTrue());
+    }
+
+    public Set<ActivityDTO> findChildrenActivities(ActivityDTO dto) {
+        Activity parent = getConverter().fromDto(dto);
+        return getConverter().fromEntity(getRepository().findByParentActivityAndActiveTrue(parent));
     }
 
     @Override

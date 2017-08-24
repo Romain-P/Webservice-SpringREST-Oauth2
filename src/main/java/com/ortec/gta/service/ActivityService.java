@@ -34,8 +34,18 @@ public class ActivityService extends AbstractCrudService<ActivityDTO, ActivityRe
 
         return actives.stream().flatMap(set ->
             Stream.concat(Stream.of(set), set.getSubActivities().stream()
-                    .sorted((a, b) -> Long.compare(b.getModificationDate(), a.getModificationDate())))
+                    .sorted((a, o2) -> Long.compare(o2.getModificationDate(), a.getModificationDate())))
         ).collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    public Set<ActivityDTO> getParents() {
+        return getRepository().findParentActivities();
+    }
+
+    public Set<ActivityDTO> getParents(int id) {
+        return getRepository().findById(id)
+                .map(activity -> getRepository().findChildrenActivities(activity))
+                .orElseGet(Sets::newHashSet);
     }
 
     @Override
