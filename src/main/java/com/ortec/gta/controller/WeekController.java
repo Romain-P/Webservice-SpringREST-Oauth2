@@ -17,15 +17,16 @@ import java.util.Set;
 @RestController
 @RequestMapping("/week")
 public class WeekController extends AbstractCrudController<WeekDTO, WeekService> {
-    @GetMapping("/user/{id}")
+
+    @GetMapping("/user/{userId}/weekNumber/{weekNumber}/year/{year}")
     @ResponseStatus(HttpStatus.OK)
-    public Set<WeekDTO> getParents(@PathVariable Integer id) {
-        return getService().getUserWeeks(id);
+    public Set<WeekDTO> getParentsByWeek(@PathVariable Integer userId, @PathVariable Integer weekNumber, @PathVariable Integer year) {
+        return getService().getUserWeeks(userId, weekNumber, year);
     }
 
-    @GetMapping("/user")
+    @GetMapping("/user/weekNumber/{weekNumber}/year/{year}")
     @ResponseStatus(HttpStatus.OK)
-    public Set<WeekDTO> getTokenedParents(@Tokened TokenedUser user) {
-        return getService().getUserWeeks(user.getId());
+    public Set<WeekDTO> getParentsByWeek(@Tokened TokenedUser user, @PathVariable Integer weekNumber, @PathVariable Integer year) {
+        return getService().getUserWeeks(user.getId(), weekNumber, year);
     }
 }

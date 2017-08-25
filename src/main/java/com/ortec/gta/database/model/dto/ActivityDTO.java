@@ -25,9 +25,9 @@ public final class ActivityDTO {
     @JsonIgnoreProperties(value = {"subActivities", "users", "parentActivity"})
     private ActivityDTO parentActivity;
     @JsonIgnoreProperties(value = {"parentActivity"})
-    private Set<ActivityDTO> subActivities = new HashSet<>();
+    private Set<ActivityDTO> subActivities;
     @JsonIgnoreProperties(value = {"activities"})
-    private Set<UserDTO> users = Sets.newHashSet();
+    private Set<UserDTO> users;
     private String code;
     private boolean active;
 }

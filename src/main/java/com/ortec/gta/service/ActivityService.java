@@ -24,6 +24,11 @@ public class ActivityService extends AbstractCrudService<ActivityDTO, ActivityRe
     @Autowired
     private UserService userService;
 
+    /**
+     * Unused in the new version (on angular).
+     * This method loaded all activities and sorted it by modification date of children, packing their parent
+     * and associated children. see: https://stackoverflow.com/questions/45818320/java-8-advanced-sort
+     */
     @Override
     public Set<ActivityDTO> get() {
         Set<ActivityDTO> actives = getRepository().findActiveActivities().stream()
@@ -39,13 +44,17 @@ public class ActivityService extends AbstractCrudService<ActivityDTO, ActivityRe
     }
 
     public Set<ActivityDTO> getParents() {
-        return getRepository().findParentActivities();
+        return getRepository().findParentActivities().stream()
+                .sorted(Comparator.comparing(ActivityDTO::getModificationDate).reversed())
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public Set<ActivityDTO> getParents(int id) {
         return getRepository().findById(id)
                 .map(activity -> getRepository().findChildrenActivities(activity))
-                .orElseGet(Sets::newHashSet);
+                .orElseGet(Sets::newHashSet).stream()
+                .sorted(Comparator.comparing(ActivityDTO::getModificationDate).reversed())
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Override

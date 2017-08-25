@@ -13,7 +13,7 @@ import java.util.Set;
  */
 @Service
 public class WeekService extends AbstractCrudService<WeekDTO, WeekRepositoryImpl> {
-    public Set<WeekDTO> getUserWeeks(int userId) {
-        return getRepository().findByUser(userId);
+    public Set<WeekDTO> getUserWeeks(int userId, int weekNumber, int year) {
+        return getRepository().findByUser(userId, weekNumber, year);
     }
 }

@@ -11,6 +11,6 @@ import java.util.Set;
  * @Date: 24/08/2017
  */
 public interface WeekRepository extends CrudRepository<Week, Integer> {
-    @Query("select w from Week w where w.user.id = ?1")
-    Set<Week> findByUserId(int id);
+    @Query("select w from Week w where w.user.id = ?1 and w.weekNumber = ?2 and w.year = ?3")
+    Set<Week> findByUserId(int id, int weekNumber, int year);
 }
