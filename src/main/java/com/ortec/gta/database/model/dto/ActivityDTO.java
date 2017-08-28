@@ -1,6 +1,7 @@
 package com.ortec.gta.database.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.Sets;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -14,8 +15,9 @@ import java.util.Set;
  */
 @Accessors(chain = true)
 @Getter @Setter
+@JsonIgnoreProperties(ignoreUnknown=true)
 public final class ActivityDTO {
-    private Integer id;
+    private int id;
     private String name;
     private long creationDate;
     private long modificationDate;

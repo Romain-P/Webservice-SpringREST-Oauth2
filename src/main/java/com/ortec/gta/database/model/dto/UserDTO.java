@@ -1,6 +1,7 @@
 package com.ortec.gta.database.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.Sets;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -15,8 +16,9 @@ import java.util.Set;
 
 @Accessors(chain = true)
 @Getter @Setter
+@JsonIgnoreProperties(ignoreUnknown=true)
 public final class UserDTO {
-    private Integer id;
+    private int id;
     private String username;
     private String name;
     private String lastname;
@@ -25,6 +27,6 @@ public final class UserDTO {
     @JsonIgnoreProperties(value = {"activities", "activities"})
     private UserDTO superior;
     private Set<RoleDTO> roles;
-    @JsonIgnoreProperties(value = {"users"})
-    private Set<ActivityDTO> activities = Sets.newHashSet();
+    @JsonIgnoreProperties(value = {"users", "parentActivity"})
+    private Set<ActivityDTO> activities;
 }

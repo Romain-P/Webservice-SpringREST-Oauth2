@@ -1,5 +1,6 @@
 package com.ortec.gta.database.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -10,6 +11,7 @@ import lombok.experimental.Accessors;
 
 @Accessors(chain = true)
 @Getter @Setter
+@JsonIgnoreProperties(ignoreUnknown=true)
 public final class RoleDTO {
     private Integer id;
     private String name;
