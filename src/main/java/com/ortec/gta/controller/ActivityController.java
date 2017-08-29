@@ -24,9 +24,9 @@ public class ActivityController extends AbstractCrudController<ActivityDTO, Acti
         return getService().getParents();
     }
 
-    @GetMapping("/parents/{id}")
+    @GetMapping("/children/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Set<ActivityDTO> getParents(@PathVariable Integer id) {
-        return getService().getParents(id);
+    public Set<ActivityDTO> getChildren(@PathVariable Integer id) {
+        return getService().getChildren(id);
     }
 }
