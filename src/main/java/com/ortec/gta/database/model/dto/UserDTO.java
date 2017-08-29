@@ -16,7 +16,6 @@ import java.util.Set;
 
 @Accessors(chain = true)
 @Getter @Setter
-@JsonIgnoreProperties(ignoreUnknown=true)
 public final class UserDTO {
     private int id;
     private String username;

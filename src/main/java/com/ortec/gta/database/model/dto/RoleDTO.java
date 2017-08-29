@@ -11,7 +11,6 @@ import lombok.experimental.Accessors;
 
 @Accessors(chain = true)
 @Getter @Setter
-@JsonIgnoreProperties(ignoreUnknown=true)
 public final class RoleDTO {
     private Integer id;
     private String name;

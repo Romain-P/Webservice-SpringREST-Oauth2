@@ -3,6 +3,7 @@ package com.ortec.gta.configuration;
 import com.google.common.collect.Maps;
 import com.ortec.gta.common.database.DTOConverter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -96,6 +97,7 @@ public class DatabaseConfiguration {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return mapper;
     }
 

@@ -15,9 +15,8 @@ import java.util.Set;
  */
 @Accessors(chain = true)
 @Getter @Setter
-@JsonIgnoreProperties(ignoreUnknown=true)
 public final class ActivityDTO {
-    private int id;
+    private Integer id;
     private String name;
     private long creationDate;
     private long modificationDate;
