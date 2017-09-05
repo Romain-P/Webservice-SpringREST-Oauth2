@@ -13,8 +13,6 @@ import lombok.experimental.Accessors;
 @Getter @Setter
 public final class WeekDTO {
     private int id;
-
-    private ActivityDTO activity;
     private int weekNumber;
     private int year;
     private int monday;
@@ -25,4 +23,5 @@ public final class WeekDTO {
     private int saturday;
     private int sunday;
     private UserDTO user;
+    private ActivityDTO activity;
 }

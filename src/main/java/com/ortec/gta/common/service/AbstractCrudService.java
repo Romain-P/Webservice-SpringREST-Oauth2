@@ -18,7 +18,6 @@ public abstract class AbstractCrudService<D, R extends CrudRepositoryDtoConverte
 
     public void create(D dto) {
         repository.create(dto, true);
-        dto.getClass();
     }
 
     public void delete(Integer id) {

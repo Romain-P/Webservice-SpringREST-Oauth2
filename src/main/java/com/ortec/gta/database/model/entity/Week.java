@@ -15,7 +15,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Accessors(chain = true)
-@Table(name = "week")
 @Getter @Setter
 public class Week {
     @Id
