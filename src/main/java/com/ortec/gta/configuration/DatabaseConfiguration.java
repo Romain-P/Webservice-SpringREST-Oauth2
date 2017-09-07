@@ -34,12 +34,11 @@ public class DatabaseConfiguration {
 
     /**
      * @return the wrapped spring data jpa configuration.
-     *         Change the scanning packages in case of refactoring, renaming..
+     * Change the scanning packages in case of refactoring, renaming..
      */
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource,
-                                                                       @Value("${database.dialect}") String dialect)
-    {
+                                                                       @Value("${database.dialect}") String dialect) {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setDatabase(Database.SQL_SERVER);
         vendorAdapter.setGenerateDdl(false);
@@ -65,8 +64,7 @@ public class DatabaseConfiguration {
     public DataSource dataSource(@Value("${database.driver_class}") String driver,
                                  @Value("${database.remote}") String remote,
                                  @Value("${database.username}") String username,
-                                 @Value("${database.password}") String password)
-    {
+                                 @Value("${database.password}") String password) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(driver);
         dataSource.setUrl(remote);
@@ -79,7 +77,7 @@ public class DatabaseConfiguration {
      * Set up the EntityManagerFactory, previously configured (see
      */
     @Bean
-    public PlatformTransactionManager transactionManager(EntityManagerFactory emf){
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(emf);
 
@@ -87,7 +85,7 @@ public class DatabaseConfiguration {
     }
 
     @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 

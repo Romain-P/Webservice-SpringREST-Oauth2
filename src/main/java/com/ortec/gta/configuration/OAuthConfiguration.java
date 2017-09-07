@@ -32,96 +32,96 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 public class OAuthConfiguration {
 
-	@Configuration
-	@EnableResourceServer
-	protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+    @Configuration
+    @EnableResourceServer
+    protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-		/**
-		 * Define authorized requests for all users.
-		 */
-		@Override
-		public void configure(HttpSecurity http) throws Exception {
+        /**
+         * Define authorized requests for all users.
+         */
+        @Override
+        public void configure(HttpSecurity http) throws Exception {
             http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/test").authenticated();
-		}
-	}
+        }
+    }
 
-	@Configuration
-	@EnableAuthorizationServer
-	protected static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
+    @Configuration
+    @EnableAuthorizationServer
+    protected static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
-		@Autowired
-		TokenStore tokenStore;
+        @Autowired
+        TokenStore tokenStore;
 
-		@Bean
-		public TokenStore tokenStore() {
-			return new InMemoryTokenStore();
-		}
+        @Bean
+        public TokenStore tokenStore() {
+            return new InMemoryTokenStore();
+        }
 
-		@Autowired
-		@Qualifier("authenticationManagerBean")
-		private AuthenticationManager authenticationManager;
+        @Autowired
+        @Qualifier("authenticationManagerBean")
+        private AuthenticationManager authenticationManager;
 
-		@Value("${authentication.token-request.url}")
-		private String tokenUrl;
+        @Value("${authentication.token-request.url}")
+        private String tokenUrl;
 
-		/**
-		 * Bind our authentication provider to oauth,
-		 * with a in-memory token store.
-		 */
-		@Override
-		public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-			endpoints.addInterceptor(new HandlerInterceptorAdapter() {
-				@Override
-				public boolean preHandle(HttpServletRequest hsr, HttpServletResponse rs, Object o) throws Exception {
-					rs.setHeader("Access-Control-Allow-Origin", "*");
-					rs.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST,OPTIONS");
-					rs.setHeader("Access-Control-Max-Age", "3600");
-					rs.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-					return true;
-				}
-			});
+        /**
+         * Bind our authentication provider to oauth,
+         * with a in-memory token store.
+         */
+        @Override
+        public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+            endpoints.addInterceptor(new HandlerInterceptorAdapter() {
+                @Override
+                public boolean preHandle(HttpServletRequest hsr, HttpServletResponse rs, Object o) throws Exception {
+                    rs.setHeader("Access-Control-Allow-Origin", "*");
+                    rs.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST,OPTIONS");
+                    rs.setHeader("Access-Control-Max-Age", "3600");
+                    rs.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+                    return true;
+                }
+            });
 
-			endpoints
-				.pathMapping("/oauth/token", tokenUrl)
-				.tokenStore(this.tokenStore)
-				.authenticationManager(this.authenticationManager);
-		}
+            endpoints
+                    .pathMapping("/oauth/token", tokenUrl)
+                    .tokenStore(this.tokenStore)
+                    .authenticationManager(this.authenticationManager);
+        }
 
-		@Value("${authentication.secret-id}")
-		private String clientId;
+        @Value("${authentication.secret-id}")
+        private String clientId;
 
-		@Value("${authentication.secret-key}")
-		private String clientKey;
+        @Value("${authentication.secret-key}")
+        private String clientKey;
 
-		/**
-		 * Define all applications that will access to this one.
-		 * All applications accessing to this rest app is considered as a client.
-		 * One client can be created at this moment TODO: multiple clients
-		 * Config your secret credentials in resources/application.properties
-		 */
-		@Override
-		public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-			clients
-				.inMemory()
-					.withClient(clientId)
-						.authorizedGrantTypes("password", "refresh_token")
-						.authorities("USER")
-						.scopes("read", "write")
-						.secret(clientKey);
-		}
+        /**
+         * Define all applications that will access to this one.
+         * All applications accessing to this rest app is considered as a client.
+         * One client can be created at this moment TODO: multiple clients
+         * Config your secret credentials in resources/application.properties
+         */
+        @Override
+        public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+            clients
+                    .inMemory()
+                    .withClient(clientId)
+                    .authorizedGrantTypes("password", "refresh_token")
+                    .authorities("USER")
+                    .scopes("read", "write")
+                    .secret(clientKey);
+        }
 
-		/**
-		 * Setups the token store and enables refresh tokens.
-		 * (Refresh tokens can be requested e.g after an Inactivity,
-		 * See online, oauth2 IdleTime configuration)
-		 */
-		@Bean
-		@Primary
-		public DefaultTokenServices tokenServices() {
-			DefaultTokenServices tokenServices = new DefaultTokenServices();
-			tokenServices.setSupportRefreshToken(true);
-			tokenServices.setTokenStore(this.tokenStore);
-			return tokenServices;
-		}
-	}
+        /**
+         * Setups the token store and enables refresh tokens.
+         * (Refresh tokens can be requested e.g after an Inactivity,
+         * See online, oauth2 IdleTime configuration)
+         */
+        @Bean
+        @Primary
+        public DefaultTokenServices tokenServices() {
+            DefaultTokenServices tokenServices = new DefaultTokenServices();
+            tokenServices.setSupportRefreshToken(true);
+            tokenServices.setTokenStore(this.tokenStore);
+            return tokenServices;
+        }
+    }
 }

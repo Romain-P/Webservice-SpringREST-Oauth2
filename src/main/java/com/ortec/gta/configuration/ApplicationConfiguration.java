@@ -35,7 +35,7 @@ import java.util.List;
 @EnableWebMvc
 @PropertySource("classpath:application.properties")
 @ComponentScan(basePackages = "com.ortec.gta")
-public class ApplicationConfiguration extends WebMvcConfigurerAdapter{
+public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -73,7 +73,7 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter{
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                 Object principal = authentication.getPrincipal();
 
-                if(principal != null && !parameter.getParameterType().isAssignableFrom(principal.getClass()))
+                if (principal != null && !parameter.getParameterType().isAssignableFrom(principal.getClass()))
                     throw new ClassCastException(principal + " is not assignable to " + parameter.getParameterType());
 
                 return principal;
@@ -82,15 +82,13 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter{
             <T extends Annotation> T findMethodAnnotation(Class<T> annotationClass, MethodParameter parameter) {
                 T annotation = parameter.getParameterAnnotation(annotationClass);
 
-                if(annotation != null)
-                    return annotation;
+                if (annotation != null) return annotation;
 
                 Annotation[] annotationsToSearch = parameter.getParameterAnnotations();
-                for(Annotation toSearch : annotationsToSearch) {
+                for (Annotation toSearch : annotationsToSearch) {
                     annotation = AnnotationUtils.findAnnotation(toSearch.annotationType(), annotationClass);
 
-                    if(annotation != null)
-                        return annotation;
+                    if (annotation != null) return annotation;
                 }
                 return null;
             }
@@ -98,5 +96,8 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter{
     }
 
     @Bean
-    public ObjectMapper objectMapper() { ObjectMapper objectMapper = new ObjectMapper(); return objectMapper; }
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper;
+    }
 }

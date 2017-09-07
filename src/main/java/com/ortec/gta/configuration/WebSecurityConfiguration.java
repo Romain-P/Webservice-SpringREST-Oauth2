@@ -25,8 +25,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     /**
      * @return a custom AuthenticationProvider implementation, required to
-     *         perform a connection by username and password.
-     *         The default implementation of spring (UserDetails) provides an username only.
+     * perform a connection by username and password.
+     * The default implementation of spring (UserDetails) provides an username only.
      */
     @Override
     @Bean
