@@ -11,6 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 
@@ -26,7 +29,10 @@ import java.util.stream.Collectors;
 @Service
 public class UserRoleService {
     @Autowired
-    UserService userService;
+    private TokenStore tokenStore;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * Do not call for grant or remote roles.
@@ -40,7 +46,28 @@ public class UserRoleService {
                 .collect(ImmutableSet.toImmutableSet());
     }
 
-    public boolean rolesChanged(UserDTO user) {
+    /**
+     * we check if the user's database roles matches with the session roles.
+     * If the user is down or up grade, we force him to re-logging by removing his token.
+     */
+    public void refreshRoles() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null && auth.isAuthenticated() && auth.getPrincipal() != null) {
+            if (auth.getPrincipal() instanceof TokenedUser) {
+                userService.get(((TokenedUser) auth.getPrincipal()).getId()).ifPresent(user -> {
+                    if (rolesChanged(user)) {
+                        OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) auth.getDetails();
+                        OAuth2Authentication oauth = tokenStore.readAuthentication(details.getTokenValue());
+
+                        tokenStore.removeAccessToken(tokenStore.getAccessToken(oauth));
+                    }
+                });
+            }
+        }
+    }
+
+    private boolean rolesChanged(UserDTO user) {
         Set<RoleDTO> databaseRoles = user.getRoles();
         Collection<? extends GrantedAuthority> sessionRoles = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
 
@@ -49,17 +76,5 @@ public class UserRoleService {
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toSet())
                         .containsAll(databaseRoles.stream().map(RoleDTO::getName).collect(Collectors.toSet()));
-    }
-
-    /**
-     * Replace the old connection by a new one: avoids a manual reconnection.
-     * This is necessary to update the authority list, due of the Authentication authority list is unmodifiable.
-     *
-     * @param user user to refresh
-     */
-    public void refreshConnection(UserDTO user) {
-        Authentication refreshed = new UsernamePasswordAuthenticationToken(new TokenedUser(user.getId()), null,
-                mapToAppRoles(user.getRoles()));
-        SecurityContextHolder.getContext().setAuthentication(refreshed);
     }
 }

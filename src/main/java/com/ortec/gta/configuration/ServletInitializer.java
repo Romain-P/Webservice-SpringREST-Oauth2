@@ -75,13 +75,7 @@ public class ServletInitializer extends AbstractDispatcherServletInitializer {
 	@Component("roleFilter")
 	protected static class RoleFilter implements Filter {
 		@Autowired
-		UserService userService;
-
-		@Autowired
 		UserRoleService roleService;
-
-		@Autowired
-		TokenStore tokenStore;
 
 		/**
 		 * On each request, we check if the user's database roles matches with the session roles.
@@ -89,21 +83,7 @@ public class ServletInitializer extends AbstractDispatcherServletInitializer {
 		 */
 		@Override
 		public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-			if (auth != null && auth.isAuthenticated() && auth.getPrincipal() != null) {
-				if (auth.getPrincipal() instanceof TokenedUser) {
-					userService.get(((TokenedUser) auth.getPrincipal()).getId()).ifPresent(user -> {
-						if (roleService.rolesChanged(user)) {
-							OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) auth.getDetails();
-							OAuth2Authentication oauth = tokenStore.readAuthentication(details.getTokenValue());
-
-							tokenStore.removeAccessToken(tokenStore.getAccessToken(oauth));
-						}
-					});
-				}
-			}
-
+			roleService.refreshRoles();
 			chain.doFilter(request, response);
 		}
 
