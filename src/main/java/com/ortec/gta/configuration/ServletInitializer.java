@@ -1,6 +1,17 @@
 package com.ortec.gta.configuration;
 
+import com.ortec.gta.common.user.TokenedUser;
+import com.ortec.gta.database.model.dto.RoleDTO;
+import com.ortec.gta.service.UserRoleService;
+import com.ortec.gta.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -12,6 +23,8 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Application Initializer, it avoids dirty xml configurations.
@@ -50,10 +63,55 @@ public class ServletInitializer extends AbstractDispatcherServletInitializer {
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		DelegatingFilterProxy filter = new DelegatingFilterProxy("springSecurityFilterChain");
 		DelegatingFilterProxy other = new DelegatingFilterProxy("corsFilter");
+		DelegatingFilterProxy roles = new DelegatingFilterProxy("roleFilter");
+
 		filter.setContextAttribute("org.springframework.web.servlet.FrameworkServlet.CONTEXT.dispatcher");
 		servletContext.addFilter("corsFilter", other).addMappingForUrlPatterns(null, false, "/*");
 		servletContext.addFilter("springSecurityFilterChain", filter).addMappingForUrlPatterns(null, false, "/*");
+		servletContext.addFilter("roleFilter", roles).addMappingForUrlPatterns(null, false, "/*");
 		super.onStartup(servletContext);
+	}
+
+	@Component("roleFilter")
+	protected static class RoleFilter implements Filter {
+		@Autowired
+		UserService userService;
+
+		@Autowired
+		UserRoleService roleService;
+
+		@Autowired
+		TokenStore tokenStore;
+
+		/**
+		 * On each request, we check if the user's database roles matches with the session roles.
+		 * If the user is down or up grade, we force him to re-logging by removing his token.
+		 */
+		@Override
+		public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+			if (auth != null && auth.isAuthenticated() && auth.getPrincipal() != null) {
+				if (auth.getPrincipal() instanceof TokenedUser) {
+					userService.get(((TokenedUser) auth.getPrincipal()).getId()).ifPresent(user -> {
+						if (roleService.rolesChanged(user)) {
+							OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) auth.getDetails();
+							OAuth2Authentication oauth = tokenStore.readAuthentication(details.getTokenValue());
+
+							tokenStore.removeAccessToken(tokenStore.getAccessToken(oauth));
+						}
+					});
+				}
+			}
+
+			chain.doFilter(request, response);
+		}
+
+		@Override
+		public void init(FilterConfig filterConfig) {}
+
+		@Override
+		public void destroy() {}
 	}
 
 	/**
