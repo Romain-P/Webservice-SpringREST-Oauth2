@@ -6,6 +6,7 @@ import com.ortec.gta.database.ActivityRepositoryImpl;
 import com.ortec.gta.database.model.dto.ActivityDTO;
 import com.ortec.gta.util.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -58,12 +59,14 @@ public class ActivityService extends AbstractCrudService<ActivityDTO, ActivityRe
     }
 
     @Override
+    @Secured("ROLE_ADMIN")
     public void update(ActivityDTO dto) {
         getRepository().findById(dto.getId()).ifPresent(stored ->
             updateDto(dto, stored.getCreationDate(), System.currentTimeMillis(), -1, false));
     }
 
     @Override
+    @Secured("ROLE_ADMIN")
     public void create(ActivityDTO dto) {
         long current = System.currentTimeMillis();
         dto.setActive(true);
@@ -71,15 +74,14 @@ public class ActivityService extends AbstractCrudService<ActivityDTO, ActivityRe
     }
 
     @Override
-    public void delete(Integer id) {
-        getRepository().findById(id).ifPresent(stored -> {
-            stored.getSubActivities().forEach(x -> delete(x.getId()));
+    @Secured("ROLE_ADMIN")
+    public void delete(ActivityDTO stored) {
+        stored.getSubActivities().forEach(this::delete);
 
-            long current = System.currentTimeMillis();
+        long current = System.currentTimeMillis();
 
-            stored.setActive(false);
-            updateDto(stored, stored.getCreationDate(), current, current, false);
-        });
+        stored.setActive(false);
+        updateDto(stored, stored.getCreationDate(), current, current, false);
     }
 
     private void updateDto(ActivityDTO dto, long creation, long edit, long delete, boolean create) {

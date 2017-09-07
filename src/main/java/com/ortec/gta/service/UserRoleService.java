@@ -34,6 +34,8 @@ public class UserRoleService {
     @Autowired
     private UserService userService;
 
+    private static final String ROLE_FORMAT = "ROLE_%s";
+
     /**
      * Do not call for grant or remote roles.
      *
@@ -42,7 +44,7 @@ public class UserRoleService {
      */
     public ImmutableSet<GrantedAuthority> mapToAppRoles(Set<RoleDTO> roles) {
         return roles.stream()
-                .map(x -> new SimpleGrantedAuthority(x.getName()))
+                .map(x -> new SimpleGrantedAuthority(String.format(ROLE_FORMAT, x.getName().toUpperCase())))
                 .collect(ImmutableSet.toImmutableSet());
     }
 
@@ -68,13 +70,13 @@ public class UserRoleService {
     }
 
     private boolean rolesChanged(UserDTO user) {
-        Set<RoleDTO> databaseRoles = user.getRoles();
+        Collection<? extends GrantedAuthority> databaseRoles = mapToAppRoles(user.getRoles());
         Collection<? extends GrantedAuthority> sessionRoles = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
 
         return databaseRoles.size() != sessionRoles.size() ||
-                !sessionRoles.stream()
+                !(sessionRoles.stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toSet())
-                        .containsAll(databaseRoles.stream().map(RoleDTO::getName).collect(Collectors.toSet()));
+                        .containsAll(databaseRoles.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet())));
     }
 }

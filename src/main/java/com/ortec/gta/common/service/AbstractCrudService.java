@@ -20,8 +20,8 @@ public abstract class AbstractCrudService<D, R extends CrudRepositoryDtoConverte
         repository.create(dto, true);
     }
 
-    public void delete(Integer id) {
-        repository.deleteById(id);
+    public void delete(D dto) {
+        repository.delete(dto);
     }
 
     public Optional<D> get(Integer id) {

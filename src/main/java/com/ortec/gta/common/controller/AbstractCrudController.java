@@ -30,7 +30,7 @@ public abstract class AbstractCrudController<D, S extends AbstractCrudService<D,
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Integer id) {
-        service.delete(id);
+        service.get(id).ifPresent(x -> service.delete(x));
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
