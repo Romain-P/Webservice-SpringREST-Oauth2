@@ -1,6 +1,7 @@
 package com.ortec.gta.service;
 
 import com.google.common.collect.ImmutableSet;
+import com.ortec.gta.common.user.TokenedUser;
 import com.ortec.gta.database.UserRepositoryImpl;
 import com.ortec.gta.database.model.dto.RoleDTO;
 import com.ortec.gta.database.model.dto.UserDTO;
@@ -11,8 +12,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
 
+import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @Author: romain.pillot
@@ -21,48 +25,30 @@ import java.util.Set;
 
 @Service
 public class UserRoleService {
-
     @Autowired
-    private UserRepositoryImpl userRepository;
-
-    /**
-     * Grant user rights.
-     *
-     * @param user a UserDTO (might be get by @Tokened)
-     * @param role a role to grant.
-     */
-    public void grantUser(UserDTO user, RoleDTO role) {
-        if (user.getRoles().contains(role))
-            return;
-        user.getRoles().add(role);
-        userRepository.update(user);
-        refreshConnection(user);
-    }
-
-    /**
-     * Demote user rights.
-     *
-     * @param user a UserDTO (might be get by @Tokened)
-     * @param role a role to grant.
-     */
-    public void demoteUser(UserDTO user, RoleDTO role) {
-        if (!user.getRoles().contains(role))
-            return;
-        user.getRoles().remove(role);
-        userRepository.update(user);
-        refreshConnection(user);
-    }
+    UserService userService;
 
     /**
      * Do not call for grant or remote roles.
      *
      * @return the model list transformed to an immutable set of GrantedAuthority.
-     *         This method might be be called to create a new Authentication.
+     * This method might be be called to create a new Authentication.
      */
     public ImmutableSet<GrantedAuthority> mapToAppRoles(Set<RoleDTO> roles) {
         return roles.stream()
                 .map(x -> new SimpleGrantedAuthority(x.getName()))
                 .collect(ImmutableSet.toImmutableSet());
+    }
+
+    public boolean rolesChanged(UserDTO user) {
+        Set<RoleDTO> databaseRoles = user.getRoles();
+        Collection<? extends GrantedAuthority> sessionRoles = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+
+        return databaseRoles.size() != sessionRoles.size() ||
+                !sessionRoles.stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toSet())
+                        .containsAll(databaseRoles.stream().map(RoleDTO::getName).collect(Collectors.toSet()));
     }
 
     /**
@@ -71,8 +57,8 @@ public class UserRoleService {
      *
      * @param user user to refresh
      */
-    private void refreshConnection(UserDTO user) {
-        Authentication refreshed = new UsernamePasswordAuthenticationToken(user, null,
+    public void refreshConnection(UserDTO user) {
+        Authentication refreshed = new UsernamePasswordAuthenticationToken(new TokenedUser(user.getId()), null,
                 mapToAppRoles(user.getRoles()));
         SecurityContextHolder.getContext().setAuthentication(refreshed);
     }

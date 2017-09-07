@@ -19,7 +19,7 @@ import java.util.Optional;
  */
 
 @Service
-public class OrtecAuthenticationService implements AuthenticationService{
+public class OrtecAuthenticationService implements AuthenticationService {
     private final Authentification authentication;
     private final UserRepositoryImpl userRepository;
 
@@ -27,8 +27,7 @@ public class OrtecAuthenticationService implements AuthenticationService{
     public OrtecAuthenticationService(UserRepositoryImpl userRepository,
                                       @Value("${login-service.url}") String remoteAddress,
                                       @Value("${login-service.domain}") String baseDomain,
-                                      @Value("${login-service.authentication-type}") String authenticationType)
-    {
+                                      @Value("${login-service.authentication-type}") String authenticationType) {
         this.userRepository = userRepository;
         this.authentication = new ADAuthentification(remoteAddress, baseDomain, authenticationType);
     }
@@ -48,9 +47,9 @@ public class OrtecAuthenticationService implements AuthenticationService{
 
         return Optional.ofNullable(
                 ldapUser.map(ldap -> userRepository.findByUsername(username)
-                            .orElseGet(() -> ldapFirstConnection(ldap)))
+                        .orElseGet(() -> ldapFirstConnection(ldap)))
                         .orElseGet(() -> userRepository.findByUsernameAndPassword(username, DigestUtils.sha256Hex(password))
-                        .orElse(null)));
+                                .orElse(null)));
     }
 
     /**

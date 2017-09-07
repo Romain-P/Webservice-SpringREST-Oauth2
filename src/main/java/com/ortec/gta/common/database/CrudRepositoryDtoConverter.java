@@ -145,6 +145,9 @@ public abstract class CrudRepositoryDtoConverter<R extends CrudRepository<E, Int
             return this;
         }
 
+        ModelMapper mapper;
+
+
         /**
          * @param consumer a biconsumer (entity, dto). `dto` is a basic conversion of `entity`.
          *            Do whatever you want on the dto to continue a custom conversion.

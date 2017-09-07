@@ -1,6 +1,5 @@
 package com.ortec.gta.database.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.Accessors;
 
