@@ -20,6 +20,6 @@ public class SecurityService {
 
         if (requester == null || target == null) return false;
 
-        return true; //TODO: Check if the targerted user is a child of the requester user.
+        return true; //TODO: Check if the targeted user is a child of the requester user.
     }
 }

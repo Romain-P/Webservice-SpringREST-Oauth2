@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -46,4 +47,7 @@ public class User {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id", referencedColumnName= "id")
     private User superior;
+
+    @OneToMany(mappedBy="superior", fetch = FetchType.EAGER)
+    private Set<User> children;
 }

@@ -23,9 +23,11 @@ public final class UserDTO {
     private String lastname;
     private byte[] avatar;
     private String email;
-    @JsonIgnoreProperties(value = {"activities", "activities"})
+    @JsonIgnoreProperties(value = {"activities"})
     private UserDTO superior;
     private Set<RoleDTO> roles;
     @JsonIgnoreProperties(value = {"users", "parentActivity"})
     private Set<ActivityDTO> activities;
+    @JsonIgnoreProperties(value = {"superior"})
+    private Set<UserDTO> children = Sets.newHashSet();
 }
