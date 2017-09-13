@@ -1,6 +1,5 @@
 package com.ortec.gta.service.authentication;
 
-import com.google.common.collect.Sets;
 import com.lambdista.util.Try;
 import com.ortec.gta.database.UserRepositoryImpl;
 import com.ortec.gta.database.model.dto.UserDTO;
@@ -55,41 +54,19 @@ public class OrtecAuthenticationService implements AuthenticationService {
                 ldapUser.map(ldap -> userRepository.findByUsername(username)
                         .orElseGet(() -> ldapFirstConnection(ldap)))
                         .orElseGet(() -> userRepository.findByUsernameAndPassword(username, DigestUtils.sha256Hex(password))
-                                .orElse(null)));
-    }
+                                .orElse(null)))
+                .map(x -> {
+                        Set<UserDTO> metaUsers = metaDirectory.getUserChildren(x);
 
-    /**
-     * dev method, to remove in production mode
-     */
-    public Optional<UserDTO> loadByConnectionHacky(String username, String password) {
-        Optional<Utilisateur> ldapUser = Try.apply(() -> authentication.getUtilisateur(username, password)).toOptional();
-
-        Optional<UserDTO> o = Optional.ofNullable(
-                ldapUser.map(ldap -> userRepository.findByUsername(username)
-                        .orElseGet(() -> ldapFirstConnection(ldap)))
-                        .orElseGet(() -> {
-                            String[] split = username.split("\\.");
-                            return userRepository.findByUsername(username)
-                                    .orElseGet(() ->metaDirectory.findUserDetailsHacky(split[0].toLowerCase(), split[1].toLowerCase())
-                                    .map(x -> {
-                                        Set<UserDTO> children = x.getChildren();
-
-                                        userRepository.create(x.setId(0)
-                                                .setSuperior(null)
-                                                .setChildren(Sets.newHashSet())
-                                                .setRoles(Sets.newHashSet())
-                                                .setActivities(Sets.newHashSet()), true);
-
-                                        persistChildren(x.setChildren(children));
-                                        return x;
-                                    }).orElse(null));
-                        }));
-        return o;
+                        if (metaUsers.size() > 0)
+                            persistChildren(x.setChildren(metaUsers));
+                    return x;
+                });
     }
 
     /**
      * @param ldap an ortec active directory user.
-     * @return a UserDTO an generate its model
+     * @return a UserDTO and generate its model
      */
     private UserDTO ldapFirstConnection(Utilisateur ldap) {
         UserDTO dto = new UserDTO();
@@ -100,11 +77,6 @@ public class OrtecAuthenticationService implements AuthenticationService {
         dto.setName(ldap.getPrenom());
 
         userRepository.create(dto, true);
-
-        Set<UserDTO> metaUsers = metaDirectory.getUserChildren(dto);
-        if (metaUsers.size() > 0)
-            persistChildren(dto.setChildren(metaUsers));
-
         return dto;
     }
 

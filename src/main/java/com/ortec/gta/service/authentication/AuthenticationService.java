@@ -17,5 +17,4 @@ public interface AuthenticationService {
      * @return an optional of global user (content is nullable).
      */
     Optional<UserDTO> loadByConnection(String username, String password);
-    Optional<UserDTO> loadByConnectionHacky(String username, String password);
 }

@@ -1,9 +1,11 @@
 package com.ortec.gta.service.authentication;
 
 import com.ortec.gta.common.user.TokenedUser;
+import com.ortec.gta.database.UserRepositoryImpl;
 import com.ortec.gta.service.UserRoleService;
 import com.ortec.gta.database.model.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +23,7 @@ import java.io.Serializable;
 public class ExternalAuthenticationProvider implements AuthenticationProvider, Serializable {
 
     @Autowired
+    @Qualifier("devAuthenticationService")
     AuthenticationService authenticationService;
 
     @Autowired
@@ -39,7 +42,7 @@ public class ExternalAuthenticationProvider implements AuthenticationProvider, S
         String password = authentication.getCredentials().toString();
 
         UserDTO user = authenticationService
-                .loadByConnectionHacky(name, password)
+                .loadByConnection(name, password)
                 .orElseThrow(() ->
                         new BadCredentialsException(String.format("Bad user/pass for %s", name)));
 

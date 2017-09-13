@@ -39,9 +39,10 @@ public class MetaDirectoryService {
     }
 
     /**
-     * dev method, to remove in production mode
+     * Retrieve a meta-directory user without caching
      */
-    public Optional<UserDTO> findUserDetailsHacky(String name, String lastname) {
+    @Deprecated
+    public Optional<UserDTO> findUserDetails(String name, String lastname) {
         UserDTO[] found = httpService
                 .get(formatUrl, name, lastname)
                 .toResponse(UserDTO[].class);
