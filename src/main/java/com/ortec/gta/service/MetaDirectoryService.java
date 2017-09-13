@@ -1,12 +1,14 @@
 package com.ortec.gta.service;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.ortec.gta.database.model.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -27,18 +29,32 @@ public class MetaDirectoryService {
         this.cache = Maps.newHashMap();
     }
 
-    public UserDTO findUserDetails(UserDTO user) {
-        return cache.computeIfAbsent(user.getId(), id ->
-                httpService
-                        .get(formatUrl, user.getName(), user.getLastname())
-                        .toResponse(UserDTO.class));
+    public Optional<UserDTO> findUserDetails(UserDTO user) {
+        return Optional.ofNullable(cache.computeIfAbsent(user.getId(), id -> {
+            UserDTO[] found = httpService
+                    .get(formatUrl, user.getName(), user.getLastname())
+                    .toResponse(UserDTO[].class);
+            return found.length > 0 ? found[0] : null;
+        }));
+    }
+
+    /**
+     * dev method, to remove in production mode
+     */
+    public Optional<UserDTO> findUserDetailsHacky(String name, String lastname) {
+        UserDTO[] found = httpService
+                .get(formatUrl, name, lastname)
+                .toResponse(UserDTO[].class);
+        return Optional.ofNullable(found.length > 0 ? found[0] : null);
     }
 
     public Set<UserDTO> getUserChildren(UserDTO user) {
-        return findUserDetails(user).getChildren();
+        return findUserDetails(user)
+                .map(UserDTO::getChildren)
+                .orElseGet(Sets::newHashSet);
     }
 
-    public UserDTO getUserParent(UserDTO user) {
-        return findUserDetails(user).getSuperior();
+    public Optional<UserDTO> getUserParent(UserDTO user) {
+        return findUserDetails(user).map(UserDTO::getSuperior);
     }
 }

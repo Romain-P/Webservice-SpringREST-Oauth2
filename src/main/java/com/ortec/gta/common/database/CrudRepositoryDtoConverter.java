@@ -102,7 +102,7 @@ public abstract class CrudRepositoryDtoConverter<R extends CrudRepository<E, Int
                 .collect(Collectors.toSet());
     }
 
-    public void create(final D dto, boolean hasId) {
+    public void create(D dto, boolean hasId) {
         E entity = converter.fromDto(dto);
         entity = repository.save(entity);
         if (!hasId) return;

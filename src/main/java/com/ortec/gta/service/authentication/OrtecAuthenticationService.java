@@ -1,8 +1,10 @@
 package com.ortec.gta.service.authentication;
 
+import com.google.common.collect.Sets;
 import com.lambdista.util.Try;
 import com.ortec.gta.database.UserRepositoryImpl;
 import com.ortec.gta.database.model.dto.UserDTO;
+import com.ortec.gta.service.MetaDirectoryService;
 import fr.ortec.dsi.domaine.Utilisateur;
 import fr.ortec.dsi.securite.authentification.activedirectory.ADAuthentification;
 import fr.ortec.dsi.securite.authentification.services.Authentification;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @Author: romain.pillot
@@ -22,14 +25,17 @@ import java.util.Optional;
 public class OrtecAuthenticationService implements AuthenticationService {
     private final Authentification authentication;
     private final UserRepositoryImpl userRepository;
+    private final MetaDirectoryService metaDirectory;
 
     @Autowired
-    public OrtecAuthenticationService(UserRepositoryImpl userRepository,
+    public OrtecAuthenticationService(MetaDirectoryService metaDirectory,
+                                      UserRepositoryImpl userRepository,
                                       @Value("${login-service.url}") String remoteAddress,
                                       @Value("${login-service.domain}") String baseDomain,
                                       @Value("${login-service.authentication-type}") String authenticationType) {
         this.userRepository = userRepository;
         this.authentication = new ADAuthentification(remoteAddress, baseDomain, authenticationType);
+        this.metaDirectory = metaDirectory;
     }
 
     /**
@@ -53,6 +59,35 @@ public class OrtecAuthenticationService implements AuthenticationService {
     }
 
     /**
+     * dev method, to remove in production mode
+     */
+    public Optional<UserDTO> loadByConnectionHacky(String username, String password) {
+        Optional<Utilisateur> ldapUser = Try.apply(() -> authentication.getUtilisateur(username, password)).toOptional();
+
+        Optional<UserDTO> o = Optional.ofNullable(
+                ldapUser.map(ldap -> userRepository.findByUsername(username)
+                        .orElseGet(() -> ldapFirstConnection(ldap)))
+                        .orElseGet(() -> {
+                            String[] split = username.split("\\.");
+                            return userRepository.findByUsername(username)
+                                    .orElseGet(() ->metaDirectory.findUserDetailsHacky(split[0].toLowerCase(), split[1].toLowerCase())
+                                    .map(x -> {
+                                        Set<UserDTO> children = x.getChildren();
+
+                                        userRepository.create(x.setId(0)
+                                                .setSuperior(null)
+                                                .setChildren(Sets.newHashSet())
+                                                .setRoles(Sets.newHashSet())
+                                                .setActivities(Sets.newHashSet()), true);
+
+                                        persistChildren(x.setChildren(children));
+                                        return x;
+                                    }).orElse(null));
+                        }));
+        return o;
+    }
+
+    /**
      * @param ldap an ortec active directory user.
      * @return a UserDTO an generate its model
      */
@@ -65,6 +100,38 @@ public class OrtecAuthenticationService implements AuthenticationService {
         dto.setName(ldap.getPrenom());
 
         userRepository.create(dto, true);
+
+        Set<UserDTO> metaUsers = metaDirectory.getUserChildren(dto);
+        if (metaUsers.size() > 0)
+            persistChildren(dto.setChildren(metaUsers));
+
         return dto;
+    }
+
+    /**
+     * Retrieves the children of a given parent user,
+     * and then persists them into the database
+     *
+     * @param parent user parent
+     */
+    private void persistChildren(UserDTO parent) {
+        for (UserDTO child: parent.getChildren()) {
+            UserDTO user = userRepository.findByUsername(getUsername(child))
+                    .map(x -> x.setSuperior(parent))
+                    .orElseGet(() -> child.setId(0).setSuperior(null));
+
+            if (user.getId() == 0)
+                userRepository.create(user, true);
+            else
+                userRepository.update(user);
+        }
+    }
+
+    /**
+     * @param dto user to convert
+     * @return the username of a given user dto
+     */
+    private String getUsername(UserDTO dto) {
+        return String.format("%s.%s", dto.getName(), dto.getLastname()).toLowerCase();
     }
 }

@@ -17,7 +17,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @Getter @Setter
 public final class UserDTO {
-    private int id;
+    private Integer id;
     private String username;
     private String name;
     private String lastname;
@@ -28,6 +28,6 @@ public final class UserDTO {
     private Set<RoleDTO> roles;
     @JsonIgnoreProperties(value = {"users", "parentActivity"})
     private Set<ActivityDTO> activities;
-    @JsonIgnoreProperties(value = {"superior"})
-    private Set<UserDTO> children = Sets.newHashSet();
+    @JsonIgnoreProperties(value = {"activities", "superior"})
+    private Set<UserDTO> children;
 }

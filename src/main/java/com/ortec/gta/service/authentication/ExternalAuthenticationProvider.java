@@ -39,7 +39,7 @@ public class ExternalAuthenticationProvider implements AuthenticationProvider, S
         String password = authentication.getCredentials().toString();
 
         UserDTO user = authenticationService
-                .loadByConnection(name, password)
+                .loadByConnectionHacky(name, password)
                 .orElseThrow(() ->
                         new BadCredentialsException(String.format("Bad user/pass for %s", name)));
 

@@ -31,6 +31,11 @@ public class UserService extends AbstractCrudService<UserDTO, UserRepositoryImpl
 
     @PreAuthorize("principal.id == #dto.id or hasRole('ROLE_ADMIN')")
     public void update(UserDTO dto) {
-        super.update(dto);
+        get(dto.getId()).ifPresent(x -> {
+            dto.setChildren(x.getChildren());
+            dto.setSuperior(x.getSuperior());
+
+            super.update(dto);
+        });
     }
 }
