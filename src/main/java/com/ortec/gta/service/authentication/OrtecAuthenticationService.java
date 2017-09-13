@@ -94,7 +94,7 @@ public class OrtecAuthenticationService implements AuthenticationService {
 
             if (user.getId() == 0)
                 userRepository.create(user, true);
-            else
+            else if (user.getSuperior() == null || user.getSuperior().getId().equals(parent.getId()))
                 userRepository.update(user);
         }
     }
