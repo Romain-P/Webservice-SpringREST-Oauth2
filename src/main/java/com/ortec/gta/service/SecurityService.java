@@ -14,7 +14,7 @@ public class SecurityService {
     @Autowired
     UserService userService;
 
-    public boolean isSuperiorOf(int requestUserId, int targetUserId) {
+    public boolean isSuperiorOf(int requestUserId, Integer targetUserId) {
         UserDTO requester = userService.get(requestUserId).orElse(null);
         UserDTO target = userService.get(targetUserId).orElse(null);
 

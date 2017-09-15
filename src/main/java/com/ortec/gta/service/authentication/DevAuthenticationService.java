@@ -7,8 +7,10 @@ import com.ortec.gta.service.MetaDirectoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @Author: romain.pillot
@@ -44,39 +46,6 @@ public class DevAuthenticationService implements AuthenticationService {
                                 .setActivities(Sets.newHashSet()), true);
                         return x;
                     }).orElse(null);
-        })).map(x -> {
-            Set<UserDTO> metaUsers = metaDirectory.getUserChildren(x);
-
-            if (metaUsers.size() > 0)
-                persistChildren(x.setChildren(metaUsers));
-            return x;
-        });
-    }
-
-    /**
-     * Retrieves the children of a given parent user,
-     * and then persists them into the database
-     *
-     * @param parent user parent
-     */
-    private void persistChildren(UserDTO parent) {
-        for (UserDTO child : parent.getChildren()) {
-            UserDTO user = userRepository.findByUsername(getUsername(child))
-                    .map(x -> x.setSuperior(parent))
-                    .orElseGet(() -> child.setId(0).setSuperior(null));
-
-            if (user.getId() == 0)
-                userRepository.create(user, true);
-            else if (user.getSuperior() == null || user.getSuperior().getId().equals(parent.getId()))
-                userRepository.update(user);
-        }
-    }
-
-    /**
-     * @param dto user to convert
-     * @return the username of a given user dto
-     */
-    private String getUsername(UserDTO dto) {
-        return String.format("%s.%s", dto.getName(), dto.getLastname()).toLowerCase();
+        }));
     }
 }

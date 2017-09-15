@@ -28,6 +28,6 @@ public final class UserDTO {
     private Set<RoleDTO> roles;
     @JsonIgnoreProperties(value = {"users", "parentActivity"})
     private Set<ActivityDTO> activities;
-    @JsonIgnoreProperties(value = {"activities", "superior"})
+    @JsonIgnoreProperties(value = {"superior"})
     private Set<UserDTO> children;
 }

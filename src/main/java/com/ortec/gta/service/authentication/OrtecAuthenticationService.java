@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @Author: romain.pillot
@@ -54,14 +56,7 @@ public class OrtecAuthenticationService implements AuthenticationService {
                 ldapUser.map(ldap -> userRepository.findByUsername(username)
                         .orElseGet(() -> ldapFirstConnection(ldap)))
                         .orElseGet(() -> userRepository.findByUsernameAndPassword(username, DigestUtils.sha256Hex(password))
-                                .orElse(null)))
-                .map(x -> {
-                        Set<UserDTO> metaUsers = metaDirectory.getUserChildren(x);
-
-                        if (metaUsers.size() > 0)
-                            persistChildren(x.setChildren(metaUsers));
-                    return x;
-                });
+                                .orElse(null)));
     }
 
     /**
@@ -78,32 +73,5 @@ public class OrtecAuthenticationService implements AuthenticationService {
 
         userRepository.create(dto, true);
         return dto;
-    }
-
-    /**
-     * Retrieves the children of a given parent user,
-     * and then persists them into the database
-     *
-     * @param parent user parent
-     */
-    private void persistChildren(UserDTO parent) {
-        for (UserDTO child: parent.getChildren()) {
-            UserDTO user = userRepository.findByUsername(getUsername(child))
-                    .map(x -> x.setSuperior(parent))
-                    .orElseGet(() -> child.setId(0).setSuperior(null));
-
-            if (user.getId() == 0)
-                userRepository.create(user, true);
-            else if (user.getSuperior() == null || user.getSuperior().getId().equals(parent.getId()))
-                userRepository.update(user);
-        }
-    }
-
-    /**
-     * @param dto user to convert
-     * @return the username of a given user dto
-     */
-    private String getUsername(UserDTO dto) {
-        return String.format("%s.%s", dto.getName(), dto.getLastname()).toLowerCase();
     }
 }
