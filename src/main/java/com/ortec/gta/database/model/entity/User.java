@@ -5,8 +5,10 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.*;
 
 import javax.persistence.*;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -21,6 +23,8 @@ import java.util.Set;
 @Accessors(chain = true)
 @Table(name = "user_detail")
 @Getter @Setter
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,12 +40,14 @@ public class User {
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Role> roles;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_activity",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "activity_id", referencedColumnName = "id"))
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Activity> activities;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -49,5 +55,6 @@ public class User {
     private User superior;
 
     @OneToMany(mappedBy="superior", fetch = FetchType.EAGER)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<User> children;
 }

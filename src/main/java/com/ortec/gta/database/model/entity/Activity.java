@@ -1,12 +1,10 @@
 package com.ortec.gta.database.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
-import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -21,6 +19,8 @@ import java.util.Set;
 @Entity
 @Accessors(chain = true)
 @Getter @Setter
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
