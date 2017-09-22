@@ -33,20 +33,19 @@ public class User {
     private String password;
     private String name;
     private String lastname;
-    private byte[] avatar;
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Role> roles;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "user_activity",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "activity_id", referencedColumnName = "id"))
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id", updatable=false),
+            inverseJoinColumns = @JoinColumn(name = "activity_id", referencedColumnName = "id", updatable=false))
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Activity> activities;
 

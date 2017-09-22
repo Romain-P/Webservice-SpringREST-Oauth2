@@ -2,7 +2,6 @@ package com.ortec.gta.service;
 
 import com.ortec.gta.common.service.AbstractCrudService;
 import com.ortec.gta.database.UserRepositoryImpl;
-import com.ortec.gta.database.model.dto.RoleDTO;
 import com.ortec.gta.database.model.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -24,22 +23,31 @@ public class UserService extends AbstractCrudService<UserDTO, UserRepositoryImpl
     @Autowired
     private MetaDirectoryService metaDirectory;
 
-    @Override
-    public Optional<UserDTO> get(Integer id) {
-        return super.get(id).flatMap(x -> {
+    public Optional<UserDTO> getWithMetaCall(Integer id) {
+        return super.get(id).map(x -> {
             Set<UserDTO> metaUsers = metaDirectory.getUserChildren(x);
 
-            for (UserDTO child : metaUsers) {
-                UserDTO user = getRepository().findByUsername(getUsername(child))
-                        .orElseGet(() -> child.setId(0));
+            boolean changes = false;
 
-                if (user.getId() == 0)
+            for (UserDTO child : metaUsers) {
+                String username = getUsername(child);
+
+                UserDTO user = x.getChildren().stream()
+                        .filter(y -> y.getUsername().equals(username))
+                        .findFirst().orElseGet(() -> getRepository()
+                                .findByUsername(getUsername(child))
+                                .orElseGet(() -> child.setId(0)));
+
+                if (user.getId() == 0) {
                     getRepository().create(user, true);
-                else if (user.getSuperior() == null || !user.getSuperior().getId().equals(x.getId()))
+                    changes = true;
+                } else if (user.getSuperior() == null || !user.getSuperior().getId().equals(x.getId())) {
                     getRepository().update(user.setSuperior(x));
+                    changes = true;
+                }
             }
 
-            return super.get(id);
+            return changes ? super.get(id).get() : x;
         });
     }
 
@@ -65,8 +73,8 @@ public class UserService extends AbstractCrudService<UserDTO, UserRepositoryImpl
         super.delete(dto);
     }
 
-    @PreAuthorize("principal.id == #dto.id or hasRole('ROLE_ADMIN') " +
-            "or @securityService.isSuperiorOf(principal.id, #dto.id)")
+   @PreAuthorize("principal.id == #dto.id or hasRole('ROLE_ADMIN') " +
+           "or @securityService.isSuperiorOf(principal.id, #dto.id)")
     public void update(UserDTO dto) {
         get(dto.getId()).ifPresent(x -> {
             dto.setChildren(x.getChildren());

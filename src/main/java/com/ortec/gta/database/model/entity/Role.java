@@ -18,8 +18,6 @@ import javax.persistence.Table;
 @Accessors(chain = true)
 @Table(name = "role_template")
 @Getter @Setter
-@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

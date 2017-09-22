@@ -15,9 +15,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter @Setter
 public final class StatDTO {
-    private int employees;
-    private int lastWeekValidEmployees;
-    private int lastMounthValidEmployees;
+    private long employees;
+    private long lastWeekValidEmployees;
+    private long lastMounthValidEmployees;
     private Set<ActivityStatDTO> lastWeekTop;
     private Set<ActivityStatDTO> lastMonthTop;
 
@@ -25,6 +25,6 @@ public final class StatDTO {
     @Getter @Setter
     public static final class ActivityStatDTO {
         private String name;
-        private int manDays;
+        private long manDays;
     }
 }

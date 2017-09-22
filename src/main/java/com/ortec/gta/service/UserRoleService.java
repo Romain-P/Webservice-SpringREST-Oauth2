@@ -5,6 +5,7 @@ import com.ortec.gta.common.user.TokenedUser;
 import com.ortec.gta.database.UserRepositoryImpl;
 import com.ortec.gta.database.model.dto.RoleDTO;
 import com.ortec.gta.database.model.dto.UserDTO;
+import com.ortec.gta.database.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,7 +33,7 @@ public class UserRoleService {
     private TokenStore tokenStore;
 
     @Autowired
-    private UserService userService;
+    private UserRepositoryImpl userRepository;
 
     private static final String ROLE_FORMAT = "ROLE_%s";
 
@@ -57,7 +58,7 @@ public class UserRoleService {
 
         if (auth != null && auth.isAuthenticated() && auth.getPrincipal() != null) {
             if (auth.getPrincipal() instanceof TokenedUser) {
-                userService.get(((TokenedUser) auth.getPrincipal()).getId()).ifPresent(user -> {
+                userRepository.findById(((TokenedUser) auth.getPrincipal()).getId()).ifPresent(user -> {
                     if (rolesChanged(user)) {
                         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) auth.getDetails();
                         OAuth2Authentication oauth = tokenStore.readAuthentication(details.getTokenValue());

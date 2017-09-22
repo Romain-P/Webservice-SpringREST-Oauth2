@@ -91,6 +91,14 @@ public abstract class CrudRepositoryDtoConverter<R extends CrudRepository<E, Int
 
     /* overlay of Crud starts */
 
+    public long count() {
+        return repository.count();
+    }
+
+    public boolean exists(Integer id) {
+        return repository.exists(id);
+    }
+
     public Optional<D> findById(int id) {
         E entity = repository.findOne(id);
         return Optional.ofNullable(entity != null ? converter.fromEntity(repository.findOne(id)) : null);

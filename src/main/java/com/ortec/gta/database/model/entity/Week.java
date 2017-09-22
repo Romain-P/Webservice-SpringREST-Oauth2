@@ -17,8 +17,6 @@ import javax.persistence.Table;
 @Entity
 @Accessors(chain = true)
 @Getter @Setter
-@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Week {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

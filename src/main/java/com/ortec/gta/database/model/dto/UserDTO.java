@@ -1,8 +1,6 @@
 package com.ortec.gta.database.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.common.collect.Sets;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -21,7 +19,6 @@ public final class UserDTO {
     private String username;
     private String name;
     private String lastname;
-    private byte[] avatar;
     private String email;
     @JsonIgnoreProperties(value = {"activities"})
     private UserDTO superior;

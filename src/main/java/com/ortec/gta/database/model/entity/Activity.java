@@ -19,8 +19,6 @@ import java.util.Set;
 @Entity
 @Accessors(chain = true)
 @Getter @Setter
-@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

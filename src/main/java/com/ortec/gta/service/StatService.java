@@ -43,8 +43,6 @@ public class StatService {
     }
 
     public StatDTO getStatistics() {
-        StatDTO.ActivityStatDTO activity = new StatDTO.ActivityStatDTO("GTA", 10);
-
         Set<UserDTO> users = getUsers();
         Set<ActivityDTO> activities = getParentActivities();
 

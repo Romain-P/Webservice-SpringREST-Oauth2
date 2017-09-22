@@ -23,6 +23,8 @@ ext {
     modelmapper = '1.1.0'
     joda_time = '2.9.9'
     swagger = '2.7.0'
+    logback = '1.2.3'
+    slf4j = '1.7.25'
 }
 
 repositories {
@@ -67,6 +69,9 @@ dependencies {
     compile "joda-time:joda-time:$joda_time"
     compile "io.springfox:springfox-swagger2:$swagger"
     compile "io.springfox:springfox-swagger-ui:$swagger"
+    compile "ch.qos.logback:logback-classic:$logback"
+    compile "ch.qos.logback:logback-core:$logback"
+    compile "org.slf4j:slf4j-api:$slf4j"
     provided "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jackson"
     provided "org.projectlombok:lombok:$lombok"
 }

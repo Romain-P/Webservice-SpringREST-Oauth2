@@ -66,7 +66,6 @@ public class OrtecAuthenticationService implements AuthenticationService {
     private UserDTO ldapFirstConnection(Utilisateur ldap) {
         UserDTO dto = new UserDTO();
         dto.setUsername(ldap.getUsername());
-        dto.setAvatar(ldap.getAvatar());
         dto.setEmail(ldap.getEmail());
         dto.setLastname(ldap.getNom());
         dto.setName(ldap.getPrenom());
