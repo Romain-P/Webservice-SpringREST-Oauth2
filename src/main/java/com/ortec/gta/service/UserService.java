@@ -23,6 +23,15 @@ public class UserService extends AbstractCrudService<UserDTO, UserRepositoryImpl
     @Autowired
     private MetaDirectoryService metaDirectory;
 
+    @Override
+    @PreAuthorize("principal.id == #id or hasRole('ROLE_ADMIN') " +
+            "or @securityService.isSuperiorOf(principal.id, #id)")
+    public Optional<UserDTO> get(Integer id) {
+        return super.get(id);
+    }
+
+    @PreAuthorize("principal.id == #id or hasRole('ROLE_ADMIN') " +
+            "or @securityService.isSuperiorOf(principal.id, #id)")
     public Optional<UserDTO> getWithMetaCall(Integer id) {
         return super.get(id).map(x -> {
             Set<UserDTO> metaUsers = metaDirectory.getUserChildren(x);
