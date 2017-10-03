@@ -50,11 +50,13 @@ public class UserController extends AbstractCrudController<UserDTO, UserService>
     }
 
     @GetMapping(value="/absenceDays/{userId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
     public Set<AbsenceDayDTO> getAbsenceDays(@PathVariable int userId, @PathVariable int year) {
         return this.agirService.getAbsenceDays(userId, year);
     }
 
     @GetMapping(value="/absenceDays/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
     public Set<AbsenceDayDTO> getCurrentAbsenceDays(@Tokened TokenedUser user, @PathVariable int year) {
         return this.agirService.getAbsenceDays(user.getId(), year);
     }
