@@ -15,12 +15,10 @@ public class SecurityService {
     UserService userService;
 
     private boolean isSuperiorOf(UserDTO requester, UserDTO target) {
-        if (requester == null || target == null) return false;
-
-        for (UserDTO child: requester.getChildren())
-            if (child.getId().equals(target.getId()) || isSuperiorOf(child, target))
-                return true;
-        return false;
+        return  requester != null && target != null &&
+                requester.getChildren()
+                        .stream()
+                        .anyMatch(x -> x.getId().equals(target.getId()) || isSuperiorOf(x, target));
     }
 
     /**
