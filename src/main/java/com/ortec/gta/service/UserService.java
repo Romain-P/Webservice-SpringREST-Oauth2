@@ -30,8 +30,8 @@ public class UserService extends AbstractCrudService<UserDTO, UserRepositoryImpl
         return super.get(id).map(x -> {
             Set<UserDTO> metaUsers = metaDirectory.findUserDetails(x)
                     .map(meta -> {
-                        if (x.getMetaId() == -1)
-                            getRepository().update(x.setMetaId(meta.getId()));
+                        if (x.getFixedId() == -1)
+                            getRepository().update(x.setFixedId(meta.getId()));
 
                         return meta.getChildren();
                     }).orElseGet(Sets::newHashSet);
@@ -45,7 +45,7 @@ public class UserService extends AbstractCrudService<UserDTO, UserRepositoryImpl
                         .filter(y -> y.getUsername().equals(username))
                         .findFirst().orElseGet(() -> getRepository()
                                 .findByUsername(getUsername(child))
-                                .orElseGet(() -> child.setMetaId(child.getId()).setId(0).setSuperior(x)));
+                                .orElseGet(() -> child.setFixedId(child.getId()).setId(0).setSuperior(x)));
 
                 if (user.getId() == 0) {
                     getRepository().create(user, true);

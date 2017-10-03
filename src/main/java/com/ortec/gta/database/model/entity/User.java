@@ -27,8 +27,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "meta_id")
-    private Integer metaId;
+    @Column(name = "fixed_id")
+    private Integer fixedId;
     private String username;
     private String password;
     private String name;

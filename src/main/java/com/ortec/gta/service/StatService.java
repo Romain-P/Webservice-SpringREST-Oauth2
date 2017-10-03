@@ -8,7 +8,11 @@ import com.ortec.gta.database.UserRepositoryImpl;
 import com.ortec.gta.database.model.dto.ActivityDTO;
 import com.ortec.gta.database.model.dto.StatDTO;
 import com.ortec.gta.database.model.dto.UserDTO;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
+import lombok.experimental.Accessors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +47,7 @@ public class StatService {
     }
 
     public StatDTO getStatistics() {
+        System.out.println(this);
         Set<UserDTO> users = getUsers();
         Set<ActivityDTO> activities = getParentActivities();
 

@@ -66,7 +66,7 @@ public class OrtecAuthenticationService {
         dto.setEmail(ldap.getEmail());
         dto.setLastname(ldap.getNom());
         dto.setName(ldap.getPrenom());
-        dto.setMetaId(-1);
+        dto.setFixedId(-1);
 
         userRepository.create(dto, true);
         return dto;
