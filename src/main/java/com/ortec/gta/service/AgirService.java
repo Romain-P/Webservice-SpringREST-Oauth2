@@ -24,6 +24,9 @@ public class AgirService {
     @Autowired
     private UserRepositoryImpl userRepository;
 
+    /**
+     * @return absence days from 01/01/{year} to 31/12/{year} of a given userId
+     */
     public Set<AbsenceDayDTO> getAbsenceDays(int userId, int year) {
         return userRepository.findById(userId)
                 .map(x -> httpService
