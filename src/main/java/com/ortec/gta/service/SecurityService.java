@@ -15,10 +15,8 @@ public class SecurityService {
     UserService userService;
 
     private boolean isSuperiorOf(UserDTO requester, UserDTO target) {
-        return  requester != null && target != null &&
-                requester.getChildren()
-                        .stream()
-                        .anyMatch(x -> x.getId().equals(target.getId()) || isSuperiorOf(x, target));
+        return requester.getChildren().stream()
+                .anyMatch(x -> x.getId().equals(target.getId()) || isSuperiorOf(x, target));
     }
 
     /**
@@ -31,6 +29,6 @@ public class SecurityService {
         UserDTO requester = userService.get(requestUserId).orElse(null);
         UserDTO target = userService.get(targetUserId).orElse(null);
 
-        return isSuperiorOf(requester, target);
+        return requester != null && target != null && isSuperiorOf(requester, target);
     }
 }
