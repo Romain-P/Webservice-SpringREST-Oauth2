@@ -1,5 +1,6 @@
 package com.ortec.gta.service;
 
+import com.google.common.collect.Sets;
 import com.ortec.gta.common.service.AbstractCrudService;
 import com.ortec.gta.database.UserRepositoryImpl;
 import com.ortec.gta.database.model.dto.UserDTO;
@@ -23,18 +24,17 @@ public class UserService extends AbstractCrudService<UserDTO, UserRepositoryImpl
     @Autowired
     private MetaDirectoryService metaDirectory;
 
-    @Override
-    @PreAuthorize("principal.id == #id or hasRole('ROLE_ADMIN') " +
-            "or @securityService.isSuperiorOf(principal.id, #id)")
-    public Optional<UserDTO> get(Integer id) {
-        return super.get(id);
-    }
-
     @PreAuthorize("principal.id == #id or hasRole('ROLE_ADMIN') " +
             "or @securityService.isSuperiorOf(principal.id, #id)")
     public Optional<UserDTO> getWithMetaCall(Integer id) {
         return super.get(id).map(x -> {
-            Set<UserDTO> metaUsers = metaDirectory.getUserChildren(x);
+            Set<UserDTO> metaUsers = metaDirectory.findUserDetails(x)
+                    .map(meta -> {
+                        if (x.getMetaId() == -1)
+                            getRepository().update(x.setMetaId(meta.getId()));
+
+                        return meta.getChildren();
+                    }).orElseGet(Sets::newHashSet);
 
             boolean changes = false;
 
@@ -45,7 +45,7 @@ public class UserService extends AbstractCrudService<UserDTO, UserRepositoryImpl
                         .filter(y -> y.getUsername().equals(username))
                         .findFirst().orElseGet(() -> getRepository()
                                 .findByUsername(getUsername(child))
-                                .orElseGet(() -> child.setId(0)));
+                                .orElseGet(() -> child.setMetaId(child.getId()).setId(0).setSuperior(x)));
 
                 if (user.getId() == 0) {
                     getRepository().create(user, true);

@@ -21,7 +21,7 @@ public final class ActivityDTO {
     private long creationDate;
     private long modificationDate;
     private long deletionDate;
-    @JsonIgnoreProperties(value = {"activities"})
+    @JsonIgnoreProperties(value = {"activities", "children"})
     private UserDTO lastEditor;
     @JsonIgnoreProperties(value = {"subActivities", "users", "parentActivity"})
     private ActivityDTO parentActivity;

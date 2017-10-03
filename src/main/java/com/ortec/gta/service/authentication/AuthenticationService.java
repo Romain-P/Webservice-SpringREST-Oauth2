@@ -14,7 +14,8 @@ public interface AuthenticationService {
      *
      * @param username the username
      * @param password the assigned password
-     * @return an optional of global user (content is nullable).
+     *
+     * @return the user if found, null otherwise (wrapped by an optional)
      */
     Optional<UserDTO> loadByConnection(String username, String password);
 }

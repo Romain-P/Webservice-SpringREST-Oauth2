@@ -43,6 +43,7 @@ public class DevAuthenticationService implements AuthenticationService {
                                 .setSuperior(null)
                                 .setChildren(Sets.newHashSet())
                                 .setRoles(Sets.newHashSet())
+                                .setMetaId(-1)
                                 .setActivities(Sets.newHashSet()), true);
                         return x;
                     }).orElse(null);

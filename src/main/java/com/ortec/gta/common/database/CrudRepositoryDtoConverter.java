@@ -101,7 +101,7 @@ public abstract class CrudRepositoryDtoConverter<R extends CrudRepository<E, Int
 
     public Optional<D> findById(int id) {
         E entity = repository.findOne(id);
-        return Optional.ofNullable(entity != null ? converter.fromEntity(repository.findOne(id)) : null);
+        return Optional.ofNullable(entity != null ? converter.fromEntity(entity) : null);
     }
 
     public Set<D> findAll(){
@@ -152,9 +152,6 @@ public abstract class CrudRepositoryDtoConverter<R extends CrudRepository<E, Int
             this.convertDto = consumer;
             return this;
         }
-
-        ModelMapper mapper;
-
 
         /**
          * @param consumer a biconsumer (entity, dto). `dto` is a basic conversion of `entity`.

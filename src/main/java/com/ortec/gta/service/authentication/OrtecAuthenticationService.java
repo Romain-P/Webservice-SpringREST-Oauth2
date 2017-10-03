@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
@@ -22,21 +23,17 @@ import java.util.stream.Collectors;
  * @Date: 25/07/2017
  */
 
-@Service
-public class OrtecAuthenticationService implements AuthenticationService {
+public class OrtecAuthenticationService {
     private final Authentification authentication;
     private final UserRepositoryImpl userRepository;
-    private final MetaDirectoryService metaDirectory;
 
     @Autowired
-    public OrtecAuthenticationService(MetaDirectoryService metaDirectory,
-                                      UserRepositoryImpl userRepository,
+    public OrtecAuthenticationService(UserRepositoryImpl userRepository,
                                       @Value("${login-service.url}") String remoteAddress,
                                       @Value("${login-service.domain}") String baseDomain,
                                       @Value("${login-service.authentication-type}") String authenticationType) {
         this.userRepository = userRepository;
         this.authentication = new ADAuthentification(remoteAddress, baseDomain, authenticationType);
-        this.metaDirectory = metaDirectory;
     }
 
     /**
@@ -69,6 +66,7 @@ public class OrtecAuthenticationService implements AuthenticationService {
         dto.setEmail(ldap.getEmail());
         dto.setLastname(ldap.getNom());
         dto.setName(ldap.getPrenom());
+        dto.setMetaId(-1);
 
         userRepository.create(dto, true);
         return dto;

@@ -1,6 +1,8 @@
 package com.ortec.gta.util;
 
 import com.lambdista.util.Try;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.Optional;
 
@@ -8,9 +10,8 @@ import java.util.Optional;
  * @Author: romain.pillot
  * @Date: 03/08/2017
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ReflectUtil {
-    private ReflectUtil() {}
-
     @SuppressWarnings("unchecked")
     public static <T> Optional<T> get(Object instance, String method) {
         return Try.apply(() -> (T) instance.getClass().getMethod(method).invoke(instance)).toOptional();

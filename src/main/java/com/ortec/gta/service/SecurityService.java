@@ -1,5 +1,6 @@
 package com.ortec.gta.service;
 
+import com.ortec.gta.database.UserRepositoryImpl;
 import com.ortec.gta.database.model.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,11 +13,12 @@ import org.springframework.stereotype.Service;
 @Service("securityService")
 public class SecurityService {
     @Autowired
-    UserService userService;
+    UserRepositoryImpl userRepository;
 
     private boolean isSuperiorOf(UserDTO requester, UserDTO target) {
         return requester.getChildren().stream()
-                .anyMatch(x -> x.getId().equals(target.getId()) || isSuperiorOf(x, target));
+                .anyMatch(x -> x.getId().equals(target.getId()) ||
+                        (!x.getId().equals(requester.getId()) && isSuperiorOf(x, target)));
     }
 
     /**
@@ -26,8 +28,8 @@ public class SecurityService {
      * @return true if the requester is a parent direct/indirect of the target
      */
     public boolean isSuperiorOf(int requestUserId, Integer targetUserId) {
-        UserDTO requester = userService.get(requestUserId).orElse(null);
-        UserDTO target = userService.get(targetUserId).orElse(null);
+        UserDTO requester = userRepository.findById(requestUserId).orElse(null);
+        UserDTO target = userRepository.findById(targetUserId).orElse(null);
 
         return requester != null && target != null && isSuperiorOf(requester, target);
     }

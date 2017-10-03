@@ -1,8 +1,5 @@
 package com.ortec.gta.configuration;
 
-import com.ortec.gta.common.user.TokenedUser;
-import com.ortec.gta.service.UserRoleService;
-import com.ortec.gta.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -22,12 +18,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 public class OAuthConfiguration {
@@ -35,13 +25,21 @@ public class OAuthConfiguration {
     @Configuration
     @EnableResourceServer
     protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+        @Value("${oauth.requests.protected}")
+        private String[] protectedRequests;
 
         /**
          * Define authorized requests for all users.
          */
         @Override
         public void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/test").authenticated();
+            ExpressionUrlAuthorizationConfigurer<HttpSecurity>
+                    .ExpressionInterceptUrlRegistry register = http.authorizeRequests();
+
+            if (protectedRequests != null && protectedRequests.length > 0)
+                register.antMatchers(protectedRequests).authenticated();
+            else
+                register.anyRequest().permitAll();
         }
     }
 
@@ -61,7 +59,7 @@ public class OAuthConfiguration {
         @Qualifier("authenticationManagerBean")
         private AuthenticationManager authenticationManager;
 
-        @Value("${authentication.token-request.url}")
+        @Value("${oauth.token-request.url}")
         private String tokenUrl;
 
         /**
@@ -70,27 +68,16 @@ public class OAuthConfiguration {
          */
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-            endpoints.addInterceptor(new HandlerInterceptorAdapter() {
-                @Override
-                public boolean preHandle(HttpServletRequest hsr, HttpServletResponse rs, Object o) throws Exception {
-                    rs.setHeader("Access-Control-Allow-Origin", "*");
-                    rs.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST,OPTIONS");
-                    rs.setHeader("Access-Control-Max-Age", "3600");
-                    rs.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-                    return true;
-                }
-            });
-
             endpoints
                     .pathMapping("/oauth/token", tokenUrl)
                     .tokenStore(this.tokenStore)
                     .authenticationManager(this.authenticationManager);
         }
 
-        @Value("${authentication.secret-id}")
+        @Value("${oauth.secret-id}")
         private String clientId;
 
-        @Value("${authentication.secret-key}")
+        @Value("${oauth.secret-key}")
         private String clientKey;
 
         /**

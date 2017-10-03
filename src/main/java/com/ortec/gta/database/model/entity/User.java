@@ -23,12 +23,12 @@ import java.util.Set;
 @Accessors(chain = true)
 @Table(name = "user_detail")
 @Getter @Setter
-@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "meta_id")
+    private Integer metaId;
     private String username;
     private String password;
     private String name;
@@ -46,7 +46,6 @@ public class User {
     @JoinTable(name = "user_activity",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id", updatable=false),
             inverseJoinColumns = @JoinColumn(name = "activity_id", referencedColumnName = "id", updatable=false))
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Activity> activities;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -54,6 +53,5 @@ public class User {
     private User superior;
 
     @OneToMany(mappedBy="superior", fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<User> children;
 }

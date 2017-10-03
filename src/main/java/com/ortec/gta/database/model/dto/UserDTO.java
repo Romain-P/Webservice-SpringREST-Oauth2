@@ -16,6 +16,7 @@ import java.util.Set;
 @Getter @Setter
 public final class UserDTO {
     private Integer id;
+    private Integer metaId;
     private String username;
     private String name;
     private String lastname;
