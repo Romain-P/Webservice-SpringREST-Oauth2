@@ -27,7 +27,7 @@ public class AgirService {
     /**
      * @return absence days from 01/01/{year} to 31/12/{year} of a given userId
      */
-    public Set<AbsenceDayDTO> getAbsenceDays(int userId, int year) {
+    public Set<AbsenceDayDTO> getAbsenceDays(Long userId, int year) {
         return userRepository.findById(userId)
                 .map(x -> httpService
                         .get(formatUrl, x.getFixedId(), year + "0101", year + "3112")

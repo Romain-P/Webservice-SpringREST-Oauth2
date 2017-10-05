@@ -19,7 +19,7 @@ public class WeekRepositoryImpl extends CrudRepositoryDtoConverter<WeekRepositor
         super(Week.class, WeekDTO.class);
     }
 
-    public Set<WeekDTO> findByUser(int id, int weekNumber, int year) {
+    public Set<WeekDTO> findByUser(Long id, int weekNumber, int year) {
         return getConverter().fromEntity(getRepository().findByUserId(id, weekNumber, year));
     }
 }

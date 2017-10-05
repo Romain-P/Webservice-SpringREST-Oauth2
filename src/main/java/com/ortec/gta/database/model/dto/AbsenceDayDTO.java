@@ -11,9 +11,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter @Setter
 public class AbsenceDayDTO {
-    private int userId;
+    private long userId;
     private int year;
     private int day;
+    private int week_number;
     private float absence_value;
     private String absence_type;
 }

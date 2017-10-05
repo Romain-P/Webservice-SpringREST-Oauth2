@@ -18,7 +18,7 @@ import java.util.Set;
 public class WeekService extends AbstractCrudService<WeekDTO, WeekRepositoryImpl> {
     @PreAuthorize("principal.id == #userId or hasRole('ROLE_ADMIN') " +
                   "or @securityService.isSuperiorOf(principal.id, #userId)")
-    public Set<WeekDTO> getUserWeeks(int userId, int weekNumber, int year) {
+    public Set<WeekDTO> getUserWeeks(Long userId, int weekNumber, int year) {
         return getRepository().findByUser(userId, weekNumber, year);
     }
 

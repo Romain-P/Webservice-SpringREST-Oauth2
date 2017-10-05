@@ -11,7 +11,7 @@ import java.util.Set;
  * @Date: 10/08/2017
  */
 @Repository
-public interface ActivityRepository extends CrudRepository<Activity, Integer> {
+public interface ActivityRepository extends CrudRepository<Activity, Long> {
     Set<Activity> findByActiveTrue();
     Set<Activity> findByParentActivityIsNullAndActiveTrue();
     Set<Activity> findByParentActivityAndActiveTrue(Activity dto);

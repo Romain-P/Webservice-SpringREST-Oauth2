@@ -19,7 +19,7 @@ import java.util.Set;
 @Service
 public class MetaDirectoryService {
     private final String formatUrl;
-    private final Map<Integer, UserDTO> cache;
+    private final Map<Long, UserDTO> cache;
 
     @Autowired
     private HttpService httpService;

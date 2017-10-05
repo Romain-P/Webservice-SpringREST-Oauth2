@@ -16,7 +16,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @Getter @Setter
 public final class ActivityDTO {
-    private Integer id;
+    private Long id;
     private String name;
     private long creationDate;
     private long modificationDate;

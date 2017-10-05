@@ -9,6 +9,7 @@ sourceCompatibility = 1.8
 
 ext {
     ortec_api = '1.0-SNAPSHOT'
+    ortec_auth = '1.2-SNAPSHOT'
     springframework = '4.3.10.RELEASE'
     jackson = '2.7.9'
     servlet = '3.1.0'
@@ -52,6 +53,7 @@ idea {
 
 dependencies {
     compile "fr.ortec.dsi.securite:OrtecSecuriteAuthentificationActiveDirectory:$ortec_api"
+    compile "fr.ortec.security:auth:$ortec_auth"
     compile "org.springframework:spring-core:$springframework"
     compile "org.springframework:spring-web:$springframework"
     compile "org.springframework:spring-webmvc:$springframework"

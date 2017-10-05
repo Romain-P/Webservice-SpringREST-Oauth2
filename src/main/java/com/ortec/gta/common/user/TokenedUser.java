@@ -10,5 +10,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public final class TokenedUser {
     @Getter
-    private final int id;
+    private final Long id;
 }

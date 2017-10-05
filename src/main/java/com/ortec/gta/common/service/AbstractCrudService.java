@@ -24,7 +24,7 @@ public abstract class AbstractCrudService<D, R extends CrudRepositoryDtoConverte
         repository.delete(dto);
     }
 
-    public Optional<D> get(Integer id) {
+    public Optional<D> get(Long id) {
         return repository.findById(id);
     }
 

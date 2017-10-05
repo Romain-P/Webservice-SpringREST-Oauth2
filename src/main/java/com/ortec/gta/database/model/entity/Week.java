@@ -20,7 +20,7 @@ import javax.persistence.Table;
 public class Week {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @Column(name = "week_number")
     private int weekNumber;
     private int year;

@@ -27,7 +27,7 @@ public class SecurityService {
      *
      * @return true if the requester is a parent direct/indirect of the target
      */
-    public boolean isSuperiorOf(int requestUserId, Integer targetUserId) {
+    public boolean isSuperiorOf(Long requestUserId, Long targetUserId) {
         UserDTO requester = userRepository.findById(requestUserId).orElse(null);
         UserDTO target = userRepository.findById(targetUserId).orElse(null);
 

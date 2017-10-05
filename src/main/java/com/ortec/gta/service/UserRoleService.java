@@ -7,6 +7,7 @@ import com.ortec.gta.database.model.dto.RoleDTO;
 import com.ortec.gta.database.model.dto.UserDTO;
 import com.ortec.gta.database.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserRoleService {
-    @Autowired
+    @Autowired @Lazy
     private TokenStore tokenStore;
 
     @Autowired
@@ -43,9 +44,9 @@ public class UserRoleService {
      * @return the model list transformed to an immutable set of GrantedAuthority.
      * This method might be be called to create a new Authentication.
      */
-    public ImmutableSet<GrantedAuthority> mapToAppRoles(Set<RoleDTO> roles) {
+    public ImmutableSet<GrantedAuthority> mapToAppRoles(Set<String> roles) {
         return roles.stream()
-                .map(x -> new SimpleGrantedAuthority(String.format(ROLE_FORMAT, x.getName().toUpperCase())))
+                .map(x -> new SimpleGrantedAuthority(String.format(ROLE_FORMAT, x.toUpperCase())))
                 .collect(ImmutableSet.toImmutableSet());
     }
 

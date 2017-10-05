@@ -1,17 +1,8 @@
 package com.ortec.gta.configuration;
 
-import com.ortec.gta.common.user.TokenedUser;
-import com.ortec.gta.database.model.dto.RoleDTO;
 import com.ortec.gta.service.UserRoleService;
-import com.ortec.gta.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -23,8 +14,6 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Application Initializer, it avoids dirty xml configurations.

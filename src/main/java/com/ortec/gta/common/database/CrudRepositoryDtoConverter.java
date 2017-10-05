@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  * @param <D> Dto
  */
 @Getter(AccessLevel.PROTECTED)
-public abstract class CrudRepositoryDtoConverter<R extends CrudRepository<E, Integer>, E, D> implements CrudDTO<D> {
+public abstract class CrudRepositoryDtoConverter<R extends CrudRepository<E, Long>, E, D> implements CrudDTO<D> {
     private DTOConverter<E, D> converter;
     private final Class<E> entityClass;
     private final Class<D> dtoClass;
@@ -95,11 +95,11 @@ public abstract class CrudRepositoryDtoConverter<R extends CrudRepository<E, Int
         return repository.count();
     }
 
-    public boolean exists(Integer id) {
+    public boolean exists(Long id) {
         return repository.exists(id);
     }
 
-    public Optional<D> findById(int id) {
+    public Optional<D> findById(Long id) {
         E entity = repository.findOne(id);
         return Optional.ofNullable(entity != null ? converter.fromEntity(entity) : null);
     }
@@ -128,7 +128,7 @@ public abstract class CrudRepositoryDtoConverter<R extends CrudRepository<E, Int
         repository.delete(converter.fromDto(dto));
     }
 
-    public void deleteById(int id){
+    public void deleteById(Long id){
         repository.delete(id);
     }
 

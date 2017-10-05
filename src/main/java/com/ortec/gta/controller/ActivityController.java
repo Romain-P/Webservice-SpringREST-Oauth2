@@ -29,7 +29,7 @@ public class ActivityController extends AbstractCrudController<ActivityDTO, Acti
 
     @GetMapping("/children/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Set<ActivityDTO> getChildren(@PathVariable Integer id) {
+    public Set<ActivityDTO> getChildren(@PathVariable Long id) {
         return getService().getChildren(id);
     }
 }

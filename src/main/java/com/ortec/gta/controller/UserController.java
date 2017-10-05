@@ -1,21 +1,18 @@
 package com.ortec.gta.controller;
 
 import com.ortec.gta.common.controller.AbstractCrudController;
-import com.ortec.gta.common.user.TokenedUser;
-import com.ortec.gta.configuration.annotation.Tokened;
 import com.ortec.gta.database.model.dto.AbsenceDayDTO;
 import com.ortec.gta.database.model.dto.UserDTO;
 import com.ortec.gta.service.AgirService;
 import com.ortec.gta.service.UserService;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import fr.ortec.security.auth.common.Session;
+import fr.ortec.security.auth.common.UserIdentity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.attribute.standard.Media;
 import java.util.Set;
 
 /**
@@ -29,21 +26,21 @@ public class UserController extends AbstractCrudController<UserDTO, UserService>
     AgirService agirService;
 
     @GetMapping(value="/current", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> getCurrent(@Tokened TokenedUser user) {
+    public ResponseEntity<UserDTO> getCurrent(@Session UserIdentity user) {
         return getService().get(user.getId())
                 .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(value="/current-meta-sync", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> getCurrentMetaSync(@Tokened TokenedUser user) {
+    public ResponseEntity<UserDTO> getCurrentMetaSync(@Session UserIdentity user) {
         return getService().getWithMetaCall(user.getId())
                 .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(value="/meta-sync/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> getMetaSync(@PathVariable Integer id) {
+    public ResponseEntity<UserDTO> getMetaSync(@PathVariable Long id) {
         return getService().getWithMetaCall(id)
                 .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -51,13 +48,13 @@ public class UserController extends AbstractCrudController<UserDTO, UserService>
 
     @GetMapping(value="/absenceDays/{userId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public Set<AbsenceDayDTO> getAbsenceDays(@PathVariable int userId, @PathVariable int year) {
+    public Set<AbsenceDayDTO> getAbsenceDays(@PathVariable Long userId, @PathVariable int year) {
         return this.agirService.getAbsenceDays(userId, year);
     }
 
     @GetMapping(value="/absenceDays/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public Set<AbsenceDayDTO> getCurrentAbsenceDays(@Tokened TokenedUser user, @PathVariable int year) {
+    public Set<AbsenceDayDTO> getCurrentAbsenceDays(@Session UserIdentity user, @PathVariable int year) {
         return this.agirService.getAbsenceDays(user.getId(), year);
     }
 }

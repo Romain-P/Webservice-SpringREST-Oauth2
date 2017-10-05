@@ -14,11 +14,11 @@ import java.util.Set;
  * @param <D> Dto Object
  */
 public interface CrudDTO<D> {
-    Optional<D> findById(int id);
+    Optional<D> findById(Long id);
     Set<D> findAll();
 
     void create(D dto, boolean hasId);
     void update(D dto);
     void delete(D dto);
-    void deleteById(int id);
+    void deleteById(Long id);
 }

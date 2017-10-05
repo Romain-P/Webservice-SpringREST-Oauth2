@@ -11,6 +11,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter @Setter
 public final class RoleDTO {
-    private Integer id;
+    private Long id;
     private String name;
 }

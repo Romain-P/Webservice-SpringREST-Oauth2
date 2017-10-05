@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter @Setter
 public final class WeekDTO {
-    private Integer id;
+    private  Long id;
     private int weekNumber;
     private int year;
     private int monday;

@@ -26,7 +26,7 @@ public class UserService extends AbstractCrudService<UserDTO, UserRepositoryImpl
 
     @PreAuthorize("principal.id == #id or hasRole('ROLE_ADMIN') " +
             "or @securityService.isSuperiorOf(principal.id, #id)")
-    public Optional<UserDTO> getWithMetaCall(Integer id) {
+    public Optional<UserDTO> getWithMetaCall(Long id) {
         return super.get(id).map(x -> {
             Set<UserDTO> metaUsers = metaDirectory.findUserDetails(x)
                     .map(meta -> {
@@ -45,7 +45,7 @@ public class UserService extends AbstractCrudService<UserDTO, UserRepositoryImpl
                         .filter(y -> y.getUsername().equals(username))
                         .findFirst().orElseGet(() -> getRepository()
                                 .findByUsername(getUsername(child))
-                                .orElseGet(() -> child.setFixedId(child.getId()).setId(0).setSuperior(x)));
+                                .orElseGet(() -> child.setFixedId(child.getId()).setId(0L).setSuperior(x)));
 
                 if (user.getId() == 0) {
                     getRepository().create(user, true);
