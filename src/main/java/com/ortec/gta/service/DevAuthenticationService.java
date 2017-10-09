@@ -15,7 +15,6 @@ import java.util.Optional;
  * @Date: 05/10/2017
  */
 
-@Service
 public class DevAuthenticationService extends OrtecAuthenticationProvider<UserDTO> {
     @Autowired
     UserRepositoryImpl userRepository;
@@ -45,6 +44,7 @@ public class DevAuthenticationService extends OrtecAuthenticationProvider<UserDT
                                     return x;
                                 }).orElse(null);
                     }));
-                });
+                })
+                .enableRsaPassword();
     }
 }

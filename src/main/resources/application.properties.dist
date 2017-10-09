@@ -1,13 +1,3 @@
-#Active Directory
-login-service.url=
-login-service.domain=
-login-service.authentication-type=
-
-#Token Request Mapping
-authentication.token-request.url=/login/token
-authentication.secret-id=clktime-app
-authentication.secret-key=clktime-secret
-
 #Database
 database.username=clktime
 database.password=clktime
@@ -17,3 +7,6 @@ database.dialect=org.hibernate.dialect.SQLServer2012Dialect
 
 #Meta Directory
 meta-directory.url=
+
+#Agir
+agir.url_format=

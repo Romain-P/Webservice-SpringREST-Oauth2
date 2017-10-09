@@ -1,0 +1,16 @@
+#Oauth Configuration
+oauth.token-request.url=/login/token
+oauth.secret-id=
+oauth.secret-key=
+oauth.requests.protected= /**
+
+#Active Directory Ortec
+active-directory.url=
+active-directory.domain=
+active-directory.authentication-type=
+
+#Crypto RSA
+#X509 format public key encoded as Base64
+crypto.rsa.public-key=
+#PKCS8 format private key encoded as Base64
+crypto.rsa.private-key=
