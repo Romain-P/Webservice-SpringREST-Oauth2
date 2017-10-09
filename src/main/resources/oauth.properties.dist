@@ -10,7 +10,5 @@ active-directory.domain=
 active-directory.authentication-type=
 
 #Crypto RSA
-#X509 format public key encoded as Base64
-crypto.rsa.public-key=
 #PKCS8 format private key encoded as Base64
 crypto.rsa.private-key=
