@@ -5,6 +5,7 @@ import com.ortec.gta.database.model.dto.UserDTO;
 import fr.ortec.dsi.domaine.Utilisateur;
 import fr.ortec.security.auth.common.AuthenticationConfigurer;
 import fr.ortec.security.auth.common.OrtecAuthenticationProvider;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class AuthenticationService extends OrtecAuthenticationProvider<UserDTO> 
         configurer
                 .loadUserByUsername(username -> userRepository.findByUsername(username))
                 .createUserEntity(this::createUserEntity)
-                .rescueInvalidAuthentication((user, pass) -> userRepository.findByUsernameAndPassword(user, pass))
+                .rescueInvalidAuthentication((user, pass) -> userRepository.findByUsernameAndPassword(user, DigestUtils.sha256Hex(pass)))
                 .enableRsaPassword();
     }
 
