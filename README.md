@@ -18,6 +18,5 @@ The webservice can also be called from any authorized device and allowed user.
 
 ## Installation
 
-Rename resource `.properties.dist` to `.properties`.  
-Refresh dependencies, and create a `TomcatLocal` running configuration defining the app war.  
+gta-core is a war module, build it and use it your favourite container e.g. Tomcat
 I recommend Intellij.

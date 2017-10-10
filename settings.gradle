@@ -1,2 +1,10 @@
 rootProject.name = 'gta_webservice'
 
+include 'gta-shared'
+include 'gta-domain'
+include 'gta-core'
+include 'gta-database'
+include 'gta-service'
+include 'gta-service-api'
+include 'gta-frontend'
+

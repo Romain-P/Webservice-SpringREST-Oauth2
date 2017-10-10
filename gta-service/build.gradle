@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':gta-database')
+    compile project(':gta-service-api')
+}

@@ -1,79 +1,80 @@
-group 'com.ortec.gta'
-version '1.0.0'
+allprojects {
+    group 'com.ortec.gta'
+    version '1.0.0'
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'war'
+    apply plugin: 'java'
+    apply plugin: 'idea'
 
-sourceCompatibility = 1.8
+    sourceCompatibility = 1.8
 
-ext {
-    ortec_api = '1.0-SNAPSHOT'
-    ortec_auth = '2.3-SNAPSHOT'
-    springframework = '4.3.10.RELEASE'
-    jackson = '2.7.9'
-    servlet = '3.1.0'
-    lombok = '1.16.18'
-    guava = '22.0'
-    oauth = '2.1.1.RELEASE'
-    springdata = '1.11.6.RELEASE'
-    jtds_sqlserver_driver = '1.3.1'
-    javax_persistence = '1.0.2'
-    hibernate = '5.2.10.Final'
-    functionaltry = '0.3.1'
-    modelmapper = '1.1.0'
-    joda_time = '2.9.9'
-    swagger = '2.7.0'
-    logback = '1.2.3'
-    slf4j = '1.7.25'
-}
-
-repositories {
-    mavenCentral()
-    maven {
-        url "http://SPRD-065:8081/artifactory/ortec-snapshot"
+    ext {
+        ortec_api = '1.0-SNAPSHOT'
+        ortec_auth = '2.3-SNAPSHOT'
+        springframework = '4.3.10.RELEASE'
+        jackson = '2.7.9'
+        servlet = '3.1.0'
+        lombok = '1.16.18'
+        guava = '22.0'
+        oauth = '2.1.1.RELEASE'
+        springdata = '1.11.6.RELEASE'
+        jtds_sqlserver_driver = '1.3.1'
+        javax_persistence = '1.0.2'
+        hibernate = '5.2.10.Final'
+        functionaltry = '0.3.1'
+        modelmapper = '1.1.0'
+        joda_time = '2.9.9'
+        swagger = '2.7.0'
+        logback = '1.2.3'
+        slf4j = '1.7.25'
     }
-}
 
-configurations {
-    provided
-}
-
-sourceSets {
-    main {
-        compileClasspath += configurations.provided
+    repositories {
+        mavenCentral()
+        maven {
+            url "http://SPRD-065:8081/artifactory/ortec-snapshot"
+        }
     }
-}
 
-idea {
-    module {
-        scopes.PROVIDED.plus += [configurations.provided]
+    configurations {
+        provided
     }
-}
 
-dependencies {
-    compile "fr.ortec.dsi.securite:OrtecSecuriteAuthentificationActiveDirectory:$ortec_api"
-    compile "fr.ortec.security:auth:$ortec_auth"
-    compile "org.springframework:spring-core:$springframework"
-    compile "org.springframework:spring-web:$springframework"
-    compile "org.springframework:spring-webmvc:$springframework"
-    compile "com.fasterxml.jackson.core:jackson-databind:$jackson"
-    compile "com.google.guava:guava:$guava"
-    compile "org.springframework.security.oauth:spring-security-oauth2:$oauth"
-    compile "org.springframework.data:spring-data-jpa:$springdata"
-    compile "javax.persistence:persistence-api:$javax_persistence"
-    compile "javax.servlet:javax.servlet-api:$servlet"
-    compile "org.hibernate:hibernate-core:$hibernate"
-    compile "org.hibernate:hibernate-ehcache:$hibernate"
-    compile "net.sourceforge.jtds:jtds:$jtds_sqlserver_driver"
-    compile "com.lambdista:try:$functionaltry"
-    compile "org.modelmapper:modelmapper:$modelmapper"
-    compile "joda-time:joda-time:$joda_time"
-    compile "io.springfox:springfox-swagger2:$swagger"
-    compile "io.springfox:springfox-swagger-ui:$swagger"
-    compile "ch.qos.logback:logback-classic:$logback"
-    compile "ch.qos.logback:logback-core:$logback"
-    compile "org.slf4j:slf4j-api:$slf4j"
-    provided "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jackson"
-    provided "org.projectlombok:lombok:$lombok"
+    sourceSets {
+        main {
+            compileClasspath += configurations.provided
+        }
+    }
+
+    idea {
+        module {
+            scopes.PROVIDED.plus += [configurations.provided]
+        }
+    }
+
+    dependencies {
+        compile "fr.ortec.dsi.securite:OrtecSecuriteAuthentificationActiveDirectory:$ortec_api"
+        compile "fr.ortec.security:auth:$ortec_auth"
+        compile "org.springframework:spring-core:$springframework"
+        compile "org.springframework:spring-web:$springframework"
+        compile "org.springframework:spring-webmvc:$springframework"
+        compile "com.fasterxml.jackson.core:jackson-databind:$jackson"
+        compile "com.google.guava:guava:$guava"
+        compile "org.springframework.security.oauth:spring-security-oauth2:$oauth"
+        compile "org.springframework.data:spring-data-jpa:$springdata"
+        compile "javax.persistence:persistence-api:$javax_persistence"
+        compile "javax.servlet:javax.servlet-api:$servlet"
+        compile "org.hibernate:hibernate-core:$hibernate"
+        compile "org.hibernate:hibernate-ehcache:$hibernate"
+        compile "net.sourceforge.jtds:jtds:$jtds_sqlserver_driver"
+        compile "com.lambdista:try:$functionaltry"
+        compile "org.modelmapper:modelmapper:$modelmapper"
+        compile "joda-time:joda-time:$joda_time"
+        compile "io.springfox:springfox-swagger2:$swagger"
+        compile "io.springfox:springfox-swagger-ui:$swagger"
+        compile "ch.qos.logback:logback-classic:$logback"
+        compile "ch.qos.logback:logback-core:$logback"
+        compile "org.slf4j:slf4j-api:$slf4j"
+        provided "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jackson"
+        provided "org.projectlombok:lombok:$lombok"
+    }
 }

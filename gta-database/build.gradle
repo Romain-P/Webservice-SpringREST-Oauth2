@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':gta-domain')
+    compile project(':gta-shared')
+}
