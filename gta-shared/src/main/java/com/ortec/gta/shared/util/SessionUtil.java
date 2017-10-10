@@ -1,6 +1,6 @@
 package com.ortec.gta.shared.util;
 
-import fr.ortec.security.auth.common.UserIdentity;
+import com.ortec.gta.domain.UserIdentity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;

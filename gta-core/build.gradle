@@ -3,4 +3,5 @@ apply plugin: 'war'
 dependencies {
     compile project(':gta-frontend')
     compile project(':gta-service')
+    compile project(':gta-auth')
 }

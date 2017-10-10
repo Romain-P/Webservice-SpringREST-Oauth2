@@ -1,10 +1,10 @@
 package com.ortec.gta.frontend;
 
+import com.ortec.gta.auth.Session;
+import com.ortec.gta.domain.UserIdentity;
 import com.ortec.gta.domain.WeekDTO;
 import com.ortec.gta.service.WeekService;
 import com.ortec.gta.shared.AbstractCrudController;
-import fr.ortec.security.auth.common.Session;
-import fr.ortec.security.auth.common.UserIdentity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

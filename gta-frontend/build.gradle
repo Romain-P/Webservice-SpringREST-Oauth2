@@ -1,3 +1,4 @@
 dependencies {
     compile project(':gta-service-api')
+    compile project(':gta-auth')
 }

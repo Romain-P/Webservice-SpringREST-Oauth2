@@ -1,12 +1,12 @@
 package com.ortec.gta.frontend;
 
+import com.ortec.gta.auth.Session;
 import com.ortec.gta.domain.AbsenceDayDTO;
 import com.ortec.gta.domain.UserDTO;
+import com.ortec.gta.domain.UserIdentity;
 import com.ortec.gta.service.AgirService;
 import com.ortec.gta.service.UserService;
 import com.ortec.gta.shared.AbstractCrudController;
-import fr.ortec.security.auth.common.Session;
-import fr.ortec.security.auth.common.UserIdentity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

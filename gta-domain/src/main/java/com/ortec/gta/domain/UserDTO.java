@@ -1,7 +1,6 @@
 package com.ortec.gta.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fr.ortec.security.auth.common.UserIdentity;
 import lombok.*;
 import lombok.experimental.Accessors;
 

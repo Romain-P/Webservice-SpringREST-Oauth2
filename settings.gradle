@@ -7,4 +7,5 @@ include 'gta-database'
 include 'gta-service'
 include 'gta-service-api'
 include 'gta-frontend'
+include 'gta-auth'
 

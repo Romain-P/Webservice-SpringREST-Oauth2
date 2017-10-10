@@ -1,14 +1,13 @@
 package com.ortec.gta.core;
 
+import com.ortec.gta.auth.AuthenticationConfigurer;
+import com.ortec.gta.auth.OrtecAuthenticationProvider;
 import com.ortec.gta.database.dao.UserDAO;
 import com.ortec.gta.domain.UserDTO;
 import fr.ortec.dsi.domaine.Utilisateur;
-import fr.ortec.security.auth.common.AuthenticationConfigurer;
-import fr.ortec.security.auth.common.OrtecAuthenticationProvider;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 /**
  * @Author: romain.pillot
