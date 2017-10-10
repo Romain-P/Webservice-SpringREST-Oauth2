@@ -5,6 +5,3 @@
 .gradle
 build
 out
-application.properties
-token-request.template
-oauth.properties
