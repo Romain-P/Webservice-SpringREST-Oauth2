@@ -24,7 +24,7 @@ public class AuthenticationService extends OrtecAuthenticationProvider<UserDTO> 
         configurer
                 .loadUserByUsername(username -> userRepository.findByUsername(username))
                 .createUserEntity(this::createUserEntity)
-                .rescueInvalidAuthentication((user, pass) -> userRepository.findByUsernameAndPassword(user, DigestUtils.sha256Hex(pass)))
+                .rescueInvalidAuthentication((user, pass) -> userRepository.findByLogin(user, DigestUtils.sha256Hex(pass)))
                 .enableRsaPassword();
     }
 

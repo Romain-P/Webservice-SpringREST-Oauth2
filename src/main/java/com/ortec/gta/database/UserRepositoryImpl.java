@@ -25,7 +25,7 @@ public class UserRepositoryImpl extends CrudRepositoryDtoConverter<UserRepositor
                 .map(x -> getConverter().fromEntity(x));
     }
 
-    public Optional<UserDTO> findByUsernameAndPassword(String username, String password) {
+    public Optional<UserDTO> findByLogin(String username, String password) {
         return getRepository().findByUsernameAndPassword(username, password)
                 .map(x -> getConverter().fromEntity(x));
     }
