@@ -1,7 +1,7 @@
 package com.ortec.gta.auth;
 
-import com.lambdista.util.Try;
 import com.ortec.gta.domain.UserIdentity;
+import com.ortec.gta.shared.Try;
 import fr.ortec.dsi.domaine.Utilisateur;
 import fr.ortec.dsi.securite.authentification.activedirectory.ADAuthentification;
 import fr.ortec.dsi.securite.authentification.services.Authentification;
@@ -58,14 +58,14 @@ public abstract class OrtecAuthenticationProvider<U extends UserIdentity> implem
         if (configurer.rsaPassword) {
             final String fixSpaces = password.replace(" ", "+");
 
-            password = Try.apply(() -> rsaHandler.decrypt(fixSpaces)).toOptional()
-                    .orElseThrow(() -> new RuntimeException("Problem while decrypting password, check keys format?"));
+            password = Try.of(() -> rsaHandler.decrypt(fixSpaces))
+                    .getOrThrow(new RuntimeException("Problem while decrypting password, check keys format?"));
         }
 
         UserIdentity user = loadByConnection(name, password)
                 .orElseThrow(() -> new BadCredentialsException(String.format("Bad user/pass for %s", name)));
 
-        Set<GrantedAuthority> roles = user.getRoles().stream()
+        Set<GrantedAuthority> roles = user.getSessionRoles().stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toSet());
 
@@ -73,12 +73,11 @@ public abstract class OrtecAuthenticationProvider<U extends UserIdentity> implem
     }
 
     private Optional<U> loadByConnection(String username, String password) {
-        Optional<Utilisateur> ldapUser = Try.apply(() -> authentication.getUtilisateur(username, password)).toOptional();
-
-        return Optional.ofNullable(
-                ldapUser.map(ldap -> configurer.findByUsername.apply(username)
-                        .orElseGet(() -> configurer.firstConnection.apply(ldap)))
-                        .orElseGet(() -> configurer.invalid.apply(username, password).orElse(null)));
+        return Try.of(() -> authentication.getUtilisateur(username, password))
+                .map(ldap -> configurer.findByUsername.apply(username)
+                .orElseGet(() -> configurer.firstConnection.apply(ldap)))
+                .mayRescue(x -> configurer.invalid.apply(username, password).orElse(null))
+                .get();
     }
 
     protected abstract void configure(AuthenticationConfigurer<U> configurer);

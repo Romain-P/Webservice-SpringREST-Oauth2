@@ -1,6 +1,6 @@
 package com.ortec.gta.shared.util;
 
-import com.lambdista.util.Try;
+import com.ortec.gta.shared.Try;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -14,10 +14,10 @@ import java.util.Optional;
 public final class ReflectUtil {
     @SuppressWarnings("unchecked")
     public static <T> Optional<T> get(Object instance, String method) {
-        return Try.apply(() -> (T) instance.getClass().getMethod(method).invoke(instance)).toOptional();
+        return Try.of(() -> (T) instance.getClass().getMethod(method).invoke(instance)).get();
     }
 
     public static boolean set(Object instance, String method, Object param) {
-        return Try.apply(() -> instance.getClass().getMethod(method, param.getClass()).invoke(instance, param)).isSuccess();
+        return Try.of(() -> instance.getClass().getMethod(method, param.getClass()).invoke(instance, param)).isSuccess();
     }
 }

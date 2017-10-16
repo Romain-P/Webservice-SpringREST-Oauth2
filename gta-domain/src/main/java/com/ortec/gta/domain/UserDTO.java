@@ -24,7 +24,7 @@ public final class UserDTO implements UserIdentity {
     private String email;
     @JsonIgnoreProperties(value = {"activities"})
     private UserDTO superior;
-    private Set<RoleDTO> roleObjects;
+    private Set<RoleDTO> roles;
     @JsonIgnoreProperties(value = {"users", "parentActivity"})
     private Set<ActivityDTO> activities;
     @JsonIgnoreProperties(value = {"superior"})
@@ -35,8 +35,8 @@ public final class UserDTO implements UserIdentity {
      *
      * @return the roles set formatted for the Spring Session.
      */
-    public Set<String> getRoles() {
-        return this.roleObjects.stream()
+    public Set<String> getSessionRoles() {
+        return this.roles.stream()
                 .map(RoleDTO::getName)
                 .collect(Collectors.toSet());
     }

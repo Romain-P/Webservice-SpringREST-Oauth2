@@ -38,7 +38,7 @@ public class DevAuthenticationConfiguration extends OrtecAuthenticationProvider<
                                     userRepository.create(x.setId(0L)
                                             .setSuperior(null)
                                             .setChildren(Sets.newHashSet())
-                                            .setRoleObjects(Sets.newHashSet())
+                                            .setRoles(Sets.newHashSet())
                                             .setFixedId(-1L)
                                             .setActivities(Sets.newHashSet()), true);
                                     return x;

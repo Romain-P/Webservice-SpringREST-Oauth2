@@ -8,5 +8,5 @@ import java.util.Set;
  */
 public interface UserIdentity {
     Long getId();
-    Set<String> getRoles();
+    Set<String> getSessionRoles();
 }

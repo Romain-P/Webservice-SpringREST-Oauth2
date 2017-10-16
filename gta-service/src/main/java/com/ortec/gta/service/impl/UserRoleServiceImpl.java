@@ -69,7 +69,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     private boolean rolesChanged(UserDTO user) {
-        Collection<? extends GrantedAuthority> databaseRoles = mapToAppRoles(user.getRoles());
+        Collection<? extends GrantedAuthority> databaseRoles = mapToAppRoles(user.getSessionRoles());
         Collection<? extends GrantedAuthority> sessionRoles = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
 
         return databaseRoles.size() != sessionRoles.size() ||

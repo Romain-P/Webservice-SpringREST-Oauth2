@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class AuthenticationConfiguration extends OrtecAuthenticationProvider<UserDTO> {
+public class OrtecAuthenticationConfiguration extends OrtecAuthenticationProvider<UserDTO> {
     @Autowired
     UserDAO userRepository;
 
